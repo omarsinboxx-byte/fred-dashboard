@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Macro Dashboard — FRED</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<style>
+  :root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page-plane:     #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --series-blue:    #2a78d6;
+    --series-orange:  #eb6834;
+    --series-aqua:    #1baf7a;
+    --series-yellow:  #eda100;
+    --series-violet:  #4a3aa7;
+    --series-red:     #e34948;
+    --good:           #006300;
+    --bad:            #c1352f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --surface-1:      #1a1a19;
+      --page-plane:     #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --gridline:       #2c2c2a;
+      --baseline:       #383835;
+      --border:         rgba(255,255,255,0.10);
+      --series-blue:    #3987e5;
+      --series-orange:  #d95926;
+      --series-aqua:    #199e70;
+      --series-yellow:  #c98500;
+      --series-violet:  #9085e9;
+      --series-red:     #e66767;
+      --good:           #0ca30c;
+      --bad:            #e66767;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--page-plane);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 24px 20px 60px; }
+
+  header { display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+  header h1 { font-size: 22px; font-weight: 600; margin: 0 0 4px; }
+  header .meta { color: var(--text-secondary); font-size: 13px; }
+  header .meta a { color: var(--series-blue); text-decoration: none; }
+  header .meta a:hover { text-decoration: underline; }
+  #statusBanner { display:none; background:#fab21922; border:1px solid var(--border); color: var(--text-secondary); font-size:13px; padding:8px 12px; border-radius:8px; margin-bottom:16px; }
+
+  h2.section-title { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--text-secondary); margin: 32px 0 12px; }
+
+  .hero-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px; }
+  .card {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .hero-card .label { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; }
+  .hero-card .value { font-size: 30px; font-weight: 600; line-height:1.1; }
+  .hero-card .value .unit { font-size: 15px; font-weight: 500; color: var(--text-secondary); margin-left: 3px; }
+  .hero-card .delta { font-size: 13px; margin-top: 6px; font-weight: 500; }
+  .hero-card .delta .arrow { display:inline-block; margin-right: 3px; }
+  .hero-card .asof { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  .chart-card { padding: 16px 20px 8px; }
+  .chart-card .chart-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom: 4px; flex-wrap:wrap; gap:6px;}
+  .chart-card h3 { font-size: 15px; font-weight: 600; margin: 0; }
+  .chart-card .sub { font-size: 12px; color: var(--text-muted); }
+  .chart-card .canvas-wrap { height: 260px; position:relative; }
+  .charts-row { display:grid; grid-template-columns: 1.6fr 1fr; gap:16px; }
+  .charts-row-2 { display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-top:16px; }
+  @media (max-width: 860px) { .charts-row, .charts-row-2 { grid-template-columns: 1fr; } }
+
+  .tile-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap:12px; }
+  .tile .label { font-size: 12.5px; color: var(--text-secondary); }
+  .tile .row { display:flex; justify-content:space-between; align-items:flex-end; margin-top:6px; }
+  .tile .value { font-size: 21px; font-weight: 600; }
+  .tile .value .unit { font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-left:2px; }
+  .tile .spark { width:96px; height:32px; }
+  .tile .delta { font-size: 12px; margin-top: 4px; font-weight: 500; }
+
+  .legend-row { display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color: var(--text-secondary); margin-bottom:6px; }
+  .legend-row .item { display:flex; align-items:center; gap:5px; }
+  .legend-row .swatch { width:10px; height:10px; border-radius:2px; display:inline-block; }
+
+  table.data-table { width:100%; border-collapse: collapse; font-size: 13px; }
+  table.data-table th, table.data-table td { text-align:right; padding: 8px 10px; border-bottom:1px solid var(--gridline); font-variant-numeric: tabular-nums; }
+  table.data-table th:first-child, table.data-table td:first-child { text-align:left; font-variant-numeric: normal; }
+  table.data-table th { color: var(--text-secondary); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:.03em; }
+
+  #tableToggle { background:none; border:1px solid var(--border); color:var(--text-secondary); border-radius:8px; padding:6px 12px; font-size:12.5px; cursor:pointer; }
+  #tableToggle:hover { color: var(--text-primary); border-color: var(--text-secondary); }
+  #tableSection { display:none; }
+
+  footer { margin-top: 40px; font-size: 12px; color: var(--text-muted); text-align:center; }
+  .tooltip-box { position:absolute; pointer-events:none; background:var(--surface-1); border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-size:12px; color:var(--text-primary); box-shadow:0 4px 16px rgba(0,0,0,0.15); transform:translate(-50%,-110%); white-space:nowrap; z-index:10; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>Macro Dashboard</h1>
+      <div class="meta">Fed policy, rates, inflation, labor &amp; risk — data from <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED</a>, Federal Reserve Bank of St. Louis</div>
+    </div>
+    <div class="meta" id="updatedAt">Loading…</div>
+  </header>
+
+  <div id="statusBanner"></div>
+
+  <h2 class="section-title">Headline</h2>
+  <div class="hero-grid" id="heroGrid"></div>
+
+  <h2 class="section-title">Rates &amp; the yield curve</h2>
+  <div class="charts-row">
+    <div class="card chart-card">
+      <div class="chart-head">
+        <h3>Fed funds vs. 2Y &amp; 10Y Treasury</h3>
+        <span class="sub">daily, %</span>
+      </div>
+      <div class="legend-row" id="ratesLegend"></div>
+      <div class="canvas-wrap"><canvas id="ratesChart"></canvas></div>
+    </div>
+    <div class="card chart-card">
+      <div class="chart-head">
+        <h3>10Y − 2Y spread</h3>
+        <span class="sub">below zero = inverted curve</span>
+      </div>
+      <div class="canvas-wrap"><canvas id="spreadChart"></canvas></div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Inflation &amp; labor</h2>
+  <div class="charts-row-2">
+    <div class="card chart-card">
+      <div class="chart-head">
+        <h3>CPI vs. Core PCE, year-over-year</h3>
+        <span class="sub">monthly, %</span>
+      </div>
+      <div class="legend-row" id="inflationLegend"></div>
+      <div class="canvas-wrap"><canvas id="inflationChart"></canvas></div>
+    </div>
+    <div class="card chart-card">
+      <div class="chart-head">
+        <h3>Nonfarm payrolls, monthly change</h3>
+        <span class="sub">thousands of jobs</span>
+      </div>
+      <div class="canvas-wrap"><canvas id="payrollsChart"></canvas></div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Everything else at a glance</h2>
+  <div class="tile-grid" id="tileGrid"></div>
+
+  <div style="margin-top:28px; text-align:center;">
+    <button id="tableToggle" type="button">Show data table</button>
+  </div>
+
+  <div id="tableSection" class="card" style="margin-top:14px; overflow-x:auto;">
+    <table class="data-table" id="dataTable">
+      <thead><tr><th>Metric</th><th>Latest</th><th>Previous</th><th>Change</th><th>As of</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <footer>
+    Auto-refreshed by a scheduled GitHub Action against the FRED API. This is informational, not investment advice.
+  </footer>
+</div>
+
+<script>
+const PALETTE = {
+  blue: getVar('--series-blue'), orange: getVar('--series-orange'), aqua: getVar('--series-aqua'),
+  yellow: getVar('--series-yellow'), violet: getVar('--series-violet'), red: getVar('--series-red'),
+  good: getVar('--good'), bad: getVar('--bad'),
+  gridline: getVar('--gridline'), muted: getVar('--text-muted'), secondary: getVar('--text-secondary'),
+  primary: getVar('--text-primary'), surface: getVar('--surface-1')
+};
+function getVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+function fmtCompact(n) {
+  if (n === null || n === undefined || isNaN(n)) return '—';
+  const abs = Math.abs(n);
+  if (abs >= 1e9) return (n/1e9).toFixed(2) + 'B';
+  if (abs >= 1e6) return (n/1e6).toFixed(2) + 'M';
+  if (abs >= 1000) return (n/1000).toFixed(1) + 'K';
+  if (abs >= 10) return n.toFixed(1);
+  return n.toFixed(2);
+}
+function fmtDate(d) {
+  const dt = new Date(d + 'T00:00:00Z');
+  return dt.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric', timeZone:'UTC' });
+}
+function deltaDirectionGood(seriesId, delta) {
+  // Whether an increase in this metric is generally "good" for a directional
+  // color cue. Metrics with no clear good/bad framing stay neutral (muted).
+  const upIsGood = { PAYEMS: true, A191RL1Q225SBEA: true };
+  const upIsBad  = { CPIAUCSL: true, PCEPILFE: true, UNRATE: true, ICSA: true };
+  if (delta === null || delta === undefined) return null;
+  if (upIsGood[seriesId]) return delta >= 0 ? 'good' : 'bad';
+  if (upIsBad[seriesId])  return delta >= 0 ? 'bad' : 'good';
+  return null; // neutral: DFF, DGS2, DGS10, T10Y2Y, M2SL, DTWEXBGS, VIXCLS
+}
+function deltaHTML(seriesId, latest, prev) {
+  if (prev === null || prev === undefined) return '<span style="color:var(--text-muted)">—</span>';
+  let delta = latest - prev;
+  if (Math.abs(delta) < 0.005) delta = 0; // avoid a stray "-0.00"
+  const dir = deltaDirectionGood(seriesId, delta);
+  const color = dir === 'good' ? 'var(--good)' : dir === 'bad' ? 'var(--bad)' : 'var(--text-secondary)';
+  const arrow = delta > 0 ? '▲' : delta < 0 ? '▼' : '–';
+  const mag = Math.abs(delta) >= 1000 ? fmtCompact(Math.abs(delta)) : Math.abs(delta).toFixed(2);
+  return `<span class="delta" style="color:${color}"><span class="arrow">${arrow}</span>${mag}</span>`;
+}
+
+function sparklineSVG(points, w, h) {
+  if (!points || points.length < 2) return '';
+  const vals = points.map(p => p.value);
+  const min = Math.min(...vals), max = Math.max(...vals);
+  const range = (max - min) || 1;
+  const step = w / (points.length - 1);
+  const coords = vals.map((v,i) => [i*step, h - ((v-min)/range)*h]);
+  const path = coords.map((c,i) => (i===0?'M':'L') + c[0].toFixed(1) + ',' + c[1].toFixed(1)).join(' ');
+  const last = coords[coords.length-1];
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+    <path d="${path}" fill="none" stroke="${PALETTE.muted}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${last[0]}" cy="${last[1]}" r="2.5" fill="${PALETTE.blue}"/>
+  </svg>`;
+}
+
+function baseGrid(unit) {
+  return {
+    x: { grid: { display:false }, ticks: { color: PALETTE.muted, maxTicksLimit: 6, font:{size:11} } },
+    y: { grid: { color: PALETTE.gridline, drawTicks:false }, border:{display:false},
+         ticks: { color: PALETTE.muted, font:{size:11}, callback: v => unit ? `${v}${unit}` : v } }
+  };
+}
+function tooltipBase() {
+  return {
+    mode:'index', intersect:false,
+    backgroundColor: PALETTE.surface, titleColor: PALETTE.primary, bodyColor: PALETTE.secondary,
+    borderColor: PALETTE.gridline, borderWidth:1, padding:10, cornerRadius:8,
+    titleFont:{size:12,weight:'600'}, bodyFont:{size:12}
+  };
+}
+// simple vertical crosshair on hover, per the interaction spec
+const crosshair = {
+  id:'crosshair',
+  afterDatasetsDraw(chart) {
+    const active = chart.getActiveElements();
+    if (!active || !active.length) return;
+    const x = active[0].element.x;
+    const {top,bottom} = chart.chartArea;
+    const ctx = chart.ctx;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(x, top); ctx.lineTo(x, bottom);
+    ctx.lineWidth = 1; ctx.strokeStyle = PALETTE.gridline;
+    ctx.stroke();
+    ctx.restore();
+  }
+};
+
+async function main() {
+  let payload;
+  try {
+    const res = await fetch('data/latest.json', { cache: 'no-store' });
+    payload = await res.json();
+  } catch (e) {
+    document.getElementById('updatedAt').textContent = 'Could not load data/latest.json';
+    return;
+  }
+  const s = payload.series;
+  const updated = new Date(payload.updated_utc);
+  document.getElementById('updatedAt').textContent = 'Updated ' + updated.toLocaleString('en-US', { dateStyle:'medium', timeStyle:'short' });
+
+  const bannerEl = document.getElementById('statusBanner');
+  if (payload.sample) {
+    bannerEl.style.display = 'block';
+    bannerEl.textContent = 'Showing sample data. Add a FRED_API_KEY secret and run the update workflow to pull live numbers.';
+  }
+
+  // ---------- Headline hero cards ----------
+  const heroIds = ['DFF','T10Y2Y','CPIAUCSL','UNRATE'];
+  const heroGrid = document.getElementById('heroGrid');
+  heroIds.forEach(id => {
+    const d = s[id]; if (!d) return;
+    const el = document.createElement('div');
+    el.className = 'card hero-card';
+    el.innerHTML = `
+      <div class="label">${d.name}</div>
+      <div class="value">${d.latest_value.toFixed(2)}<span class="unit">${d.unit}</span></div>
+      ${deltaHTML(id, d.latest_value, d.prev_value)}
+      <div class="asof">as of ${fmtDate(d.latest_date)}</div>`;
+    heroGrid.appendChild(el);
+  });
+
+  // ---------- Rates & yield curve chart ----------
+  if (s.DFF && s.DGS2 && s.DGS10) {
+    const legend = document.getElementById('ratesLegend');
+    const series = [
+      { id:'DFF', label:'Fed Funds', color: PALETTE.blue },
+      { id:'DGS2', label:'2Y Treasury', color: PALETTE.orange },
+      { id:'DGS10', label:'10Y Treasury', color: PALETTE.aqua },
+    ];
+    legend.innerHTML = series.map(sr => `<span class="item"><span class="swatch" style="background:${sr.color}"></span>${sr.label}</span>`).join('');
+    const labels = s.DFF.history.map(p => p.date);
+    new Chart(document.getElementById('ratesChart'), {
+      type: 'line',
+      data: { labels, datasets: series.map(sr => ({
+        label: sr.label,
+        data: s[sr.id].history.map(p => p.value),
+        borderColor: sr.color, backgroundColor: sr.color,
+        borderWidth: 2, pointRadius: 0, pointHoverRadius: 5,
+        pointHoverBackgroundColor: sr.color, pointHoverBorderColor: PALETTE.surface, pointHoverBorderWidth: 2,
+        tension: 0.15
+      })) },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        interaction: { mode:'index', intersect:false },
+        plugins: { legend:{display:false}, tooltip: { ...tooltipBase(), callbacks:{ label: c => ` ${c.dataset.label}: ${c.parsed.y.toFixed(2)}%` } } },
+        scales: baseGrid('%')
+      },
+      plugins:[crosshair]
+    });
+  }
+
+  // ---------- Spread chart (diverging) ----------
+  if (s.T10Y2Y) {
+    const hist = s.T10Y2Y.history;
+    new Chart(document.getElementById('spreadChart'), {
+      type: 'line',
+      data: { labels: hist.map(p=>p.date), datasets: [{
+        data: hist.map(p=>p.value),
+        borderWidth: 2, pointRadius: 0, pointHoverRadius: 5, tension: 0.1, fill: true,
+        segment: {
+          borderColor: ctx => (ctx.p0.parsed.y < 0 || ctx.p1.parsed.y < 0) ? PALETTE.red : PALETTE.blue,
+          backgroundColor: ctx => (ctx.p0.parsed.y < 0 || ctx.p1.parsed.y < 0) ? PALETTE.red + '1a' : PALETTE.blue + '1a'
+        }
+      }] },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        interaction: { mode:'index', intersect:false },
+        plugins: { legend:{display:false}, tooltip: { ...tooltipBase(), callbacks:{ label: c => ` Spread: ${c.parsed.y.toFixed(2)}pp` } } },
+        scales: baseGrid('pp')
+      },
+      plugins:[crosshair, {
+        id:'zeroLine',
+        afterDatasetsDraw(chart){
+          const y = chart.scales.y.getPixelForValue(0);
+          const {left,right} = chart.chartArea;
+          const ctx = chart.ctx;
+          ctx.save(); ctx.beginPath(); ctx.moveTo(left,y); ctx.lineTo(right,y);
+          ctx.lineWidth=1; ctx.strokeStyle = PALETTE.muted; ctx.stroke(); ctx.restore();
+        }
+      }]
+    });
+  }
+
+  // ---------- Inflation chart ----------
+  if (s.CPIAUCSL && s.PCEPILFE) {
+    const legend = document.getElementById('inflationLegend');
+    const series = [
+      { id:'CPIAUCSL', label:'CPI, YoY', color: PALETTE.orange },
+      { id:'PCEPILFE', label:'Core PCE, YoY', color: PALETTE.violet },
+    ];
+    legend.innerHTML = series.map(sr => `<span class="item"><span class="swatch" style="background:${sr.color}"></span>${sr.label}</span>`).join('');
+    const labels = s.CPIAUCSL.history.map(p=>p.date);
+    new Chart(document.getElementById('inflationChart'), {
+      type:'line',
+      data:{ labels, datasets: series.map(sr => ({
+        label: sr.label, data: s[sr.id].history.map(p=>p.value),
+        borderColor: sr.color, backgroundColor: sr.color,
+        borderWidth:2, pointRadius:0, pointHoverRadius:5, tension:0.2
+      })) },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:'index', intersect:false },
+        plugins:{ legend:{display:false}, tooltip:{ ...tooltipBase(), callbacks:{ label: c => ` ${c.dataset.label}: ${c.parsed.y.toFixed(1)}%` } } },
+        scales: baseGrid('%')
+      },
+      plugins:[crosshair]
+    });
+  }
+
+  // ---------- Payrolls diverging bar chart ----------
+  if (s.PAYEMS) {
+    const hist = s.PAYEMS.history;
+    new Chart(document.getElementById('payrollsChart'), {
+      type:'bar',
+      data:{ labels: hist.map(p=>p.date), datasets:[{
+        data: hist.map(p=>p.value),
+        backgroundColor: hist.map(p => p.value >= 0 ? PALETTE.blue : PALETTE.red),
+        borderRadius: 4, maxBarThickness: 18
+      }] },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:'index', intersect:false },
+        plugins:{ legend:{display:false}, tooltip:{ ...tooltipBase(), callbacks:{ label: c => ` ${c.parsed.y >= 0 ? '+' : ''}${c.parsed.y.toFixed(0)}K jobs` } } },
+        scales: baseGrid('K')
+      }
+    });
+  }
+
+  // ---------- Everything-else tile grid ----------
+  const restIds = ['DGS2','DGS10','PCEPILFE','PAYEMS','ICSA','M2SL','A191RL1Q225SBEA','DTWEXBGS','VIXCLS'];
+  const tileGrid = document.getElementById('tileGrid');
+  restIds.forEach(id => {
+    const d = s[id]; if (!d) return;
+    const el = document.createElement('div');
+    el.className = 'card tile';
+    el.innerHTML = `
+      <div class="label">${d.name}</div>
+      <div class="row">
+        <div>
+          <div class="value">${fmtCompact(d.latest_value)}<span class="unit">${d.unit}</span></div>
+          ${deltaHTML(id, d.latest_value, d.prev_value)}
+        </div>
+        <div class="spark">${sparklineSVG(d.history.slice(-24), 96, 32)}</div>
+      </div>`;
+    tileGrid.appendChild(el);
+  });
+
+  // ---------- Data table (accessibility fallback) ----------
+  const tbody = document.querySelector('#dataTable tbody');
+  const tblNum = n => n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  Object.values(s).forEach(d => {
+    let delta = (d.prev_value !== null && d.prev_value !== undefined) ? (d.latest_value - d.prev_value) : null;
+    if (delta !== null && Math.abs(delta) < 0.005) delta = 0;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${d.name}</td><td>${tblNum(d.latest_value)} ${d.unit}</td>
+      <td>${d.prev_value !== null && d.prev_value !== undefined ? tblNum(d.prev_value) : '—'}</td>
+      <td>${delta !== null ? (delta>=0?'+':'') + tblNum(delta) : '—'}</td>
+      <td>${fmtDate(d.latest_date)}</td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('tableToggle').addEventListener('click', () => {
+    const sec = document.getElementById('tableSection');
+    const btn = document.getElementById('tableToggle');
+    const showing = sec.style.display === 'block';
+    sec.style.display = showing ? 'none' : 'block';
+    btn.textContent = showing ? 'Show data table' : 'Hide data table';
+  });
+}
+
+main();
+</script>
+</body>
+</html>
+
