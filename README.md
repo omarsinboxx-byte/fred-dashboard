@@ -1,14 +1,18 @@
 # Macro Dashboard (FRED + gold/silver)
 
-A self-contained dashboard tracking the 6 biggest drivers of the stock
+A self-contained dashboard tracking the 5 biggest drivers of the stock
 market, ranked, plus gold and silver spot prices underneath:
 
 1. **Interest rates & Fed policy** — Fed funds rate, 2Y/10Y Treasury yields, the yield curve spread
 2. **Inflation** — CPI and core PCE, year-over-year
-3. **Corporate earnings growth** — corporate profits after tax, year-over-year
-4. **US dollar & liquidity** — the broad dollar index and M2 money supply
-5. **Oil** — WTI crude spot price
-6. **Credit spreads & labor market** — high-yield credit spread, nonfarm payrolls, unemployment, jobless claims
+3. **US dollar & liquidity** — the broad dollar index and M2 money supply
+4. **Oil** — WTI crude spot price
+5. **Credit spreads & labor market** — high-yield credit spread, nonfarm payrolls, unemployment, jobless claims
+
+(Corporate earnings growth was considered but dropped — the only free
+proxy, quarterly corporate profits from FRED, lags too much to be a
+useful timely signal alongside the other five, which all update daily
+or weekly.)
 
 ...plus GDP growth and the VIX in the "everything else" strip, and gold &
 silver spot prices in their own section. Macro data comes from the
@@ -82,7 +86,6 @@ schedule.
 | CBOE Volatility Index | `VIXCLS` | Equity risk/vol backdrop |
 | WTI Crude Oil | `DCOILWTICO` | Inflation input + consumer spending drag |
 | High-Yield Credit Spread | `BAMLH0A0HYM2` (ICE BofA US HY OAS) | Risk appetite / credit stress, confirms rate & labor stress |
-| Corporate Profits, year-over-year | `CP` (derived) | Earnings growth proxy — the fundamental floor under valuations |
 | Gold Spot | Stooq `XAUUSD` | Not FRED — pulled separately, no key needed |
 | Silver Spot | Stooq `XAGUSD` | Not FRED — pulled separately, no key needed |
 

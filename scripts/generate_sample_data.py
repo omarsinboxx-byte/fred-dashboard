@@ -117,8 +117,6 @@ def build():
         make_walk(72, 0.0, 1.1, 260, floor=35))
     add("BAMLH0A0HYM2", "High-Yield Credit Spread", "pp", "credit", daily_dates,
         make_walk(3.2, 0.0, 0.08, 260, floor=1.5))
-    add("CP", "Corporate Profits (YoY)", "%", "earnings", gdp_dates,
-        [5.0 + 3.0 * math.sin(i / 4) + random.gauss(0, 0.3) for i in range(len(gdp_dates))])
 
     payload = {
         "updated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),

@@ -128,7 +128,7 @@
   <header>
     <div>
       <h1>Macro Dashboard</h1>
-      <div class="meta">The 6 biggest drivers of the stock market, ranked — plus gold &amp; silver. Data from <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED</a> (Federal Reserve Bank of St. Louis) and <a href="https://stooq.com" target="_blank" rel="noopener">Stooq</a></div>
+      <div class="meta">The 5 biggest drivers of the stock market, ranked — plus gold &amp; silver. Data from <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED</a> (Federal Reserve Bank of St. Louis) and <a href="https://stooq.com" target="_blank" rel="noopener">Stooq</a></div>
     </div>
     <div class="meta" id="updatedAt">Loading…</div>
   </header>
@@ -169,18 +169,7 @@
     </div>
   </div>
 
-  <h2 class="section-title"><span class="rank">3</span>Corporate Earnings Growth<span class="why">The fundamental floor under any rally — rates set the multiple, earnings set the "E".</span></h2>
-  <div class="charts-row">
-    <div class="card chart-card" style="grid-column: 1 / -1;">
-      <div class="chart-head">
-        <h3>Corporate profits after tax, year-over-year</h3>
-        <span class="sub">quarterly, %</span>
-      </div>
-      <div class="canvas-wrap"><canvas id="earningsChart"></canvas></div>
-    </div>
-  </div>
-
-  <h2 class="section-title"><span class="rank">4</span>US Dollar &amp; Liquidity<span class="why">A strong dollar tightens global financial conditions and hits multinational earnings.</span></h2>
+  <h2 class="section-title"><span class="rank">3</span>US Dollar &amp; Liquidity<span class="why">A strong dollar tightens global financial conditions and hits multinational earnings.</span></h2>
   <div class="charts-row-2">
     <div class="card chart-card">
       <div class="chart-head">
@@ -198,7 +187,7 @@
     </div>
   </div>
 
-  <h2 class="section-title"><span class="rank">5</span>Oil<span class="why">Direct inflation input and a consumer-spending drag — episodic, but sharp when it moves.</span></h2>
+  <h2 class="section-title"><span class="rank">4</span>Oil<span class="why">Direct inflation input and a consumer-spending drag — episodic, but sharp when it moves.</span></h2>
   <div class="charts-row">
     <div class="card chart-card" style="grid-column: 1 / -1;">
       <div class="chart-head">
@@ -209,7 +198,7 @@
     </div>
   </div>
 
-  <h2 class="section-title"><span class="rank">6</span>Credit Spreads &amp; Labor Market<span class="why">The confirmation signal — widening spreads or a cracking jobs number means something upstream is breaking.</span></h2>
+  <h2 class="section-title"><span class="rank">5</span>Credit Spreads &amp; Labor Market<span class="why">The confirmation signal — widening spreads or a cracking jobs number means something upstream is breaking.</span></h2>
   <div class="charts-row-2">
     <div class="card chart-card">
       <div class="chart-head">
@@ -287,7 +276,7 @@ function fmtDate(d) {
 function deltaDirectionGood(seriesId, delta) {
   // Whether an increase in this metric is generally "good" for a directional
   // color cue. Metrics with no clear good/bad framing stay neutral (muted).
-  const upIsGood = { PAYEMS: true, A191RL1Q225SBEA: true, CP: true };
+  const upIsGood = { PAYEMS: true, A191RL1Q225SBEA: true };
   const upIsBad  = { CPIAUCSL: true, PCEPILFE: true, UNRATE: true, ICSA: true, BAMLH0A0HYM2: true };
   if (delta === null || delta === undefined) return null;
   if (upIsGood[seriesId]) return delta >= 0 ? 'good' : 'bad';
@@ -476,26 +465,6 @@ async function main() {
         responsive:true, maintainAspectRatio:false,
         interaction:{ mode:'index', intersect:false },
         plugins:{ legend:{display:false}, tooltip:{ ...tooltipBase(), callbacks:{ label: c => ` ${c.dataset.label}: ${c.parsed.y.toFixed(1)}%` } } },
-        scales: baseGrid('%')
-      },
-      plugins:[crosshair]
-    });
-  }
-
-  // ---------- Corporate earnings growth chart ----------
-  if (s.CP) {
-    const hist = s.CP.history;
-    new Chart(document.getElementById('earningsChart'), {
-      type:'line',
-      data:{ labels: hist.map(p=>p.date), datasets:[{
-        data: hist.map(p=>p.value),
-        borderColor: PALETTE.aqua, backgroundColor: PALETTE.aqua + '22',
-        borderWidth:2, pointRadius:0, pointHoverRadius:5, tension:0.2, fill:true
-      }] },
-      options:{
-        responsive:true, maintainAspectRatio:false,
-        interaction:{ mode:'index', intersect:false },
-        plugins:{ legend:{display:false}, tooltip:{ ...tooltipBase(), callbacks:{ label: c => ` Corporate profits YoY: ${c.parsed.y.toFixed(1)}%` } } },
         scales: baseGrid('%')
       },
       plugins:[crosshair]
