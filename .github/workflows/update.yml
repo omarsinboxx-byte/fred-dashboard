@@ -25,15 +25,17 @@ jobs:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: python scripts/fetch_fred.py
 
+      - name: Fetch gold & silver spot prices
+        run: python scripts/fetch_metals.py
+
       - name: Commit updated data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/latest.json
+          git add data/latest.json data/metals.json
           if git diff --cached --quiet; then
             echo "No data changes, nothing to commit."
           else
-            git commit -m "Update FRED data ($(date -u +%Y-%m-%d))"
+            git commit -m "Update FRED + metals data ($(date -u +%Y-%m-%d))"
             git push
           fi
-
