@@ -38,9 +38,8 @@ SERIES = {
     "A191RL1Q225SBEA": {"name": "Real GDP Growth (QoQ ann.)", "unit": "%", "keep": 24, "group": "growth"},
     "DTWEXBGS":  {"name": "US Dollar Index (Broad)",   "unit": "index",   "keep": 260, "group": "growth"},
     "VIXCLS":    {"name": "CBOE Volatility Index",     "unit": "index",   "keep": 260, "group": "growth"},
-    # -- Added: oil, credit spreads (rounds out the 5 biggest drivers of the
+    # -- Added: credit spreads (rounds out the biggest drivers of the
     #    stock market alongside rates/inflation/dollar) --
-    "DCOILWTICO": {"name": "WTI Crude Oil",            "unit": "$/bbl",   "keep": 260, "group": "oil"},
     "BAMLH0A0HYM2": {"name": "High-Yield Credit Spread", "unit": "pp",    "keep": 260, "group": "credit"},
 }
 
