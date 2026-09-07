@@ -187,21 +187,14 @@
     </div>
   </div>
 
-  <h2 class="section-title"><span class="rank">4</span>Credit Spreads &amp; Labor Market<span class="why">The confirmation signal — widening spreads or a cracking jobs number means something upstream is breaking.</span></h2>
-  <div class="charts-row-2">
-    <div class="card chart-card">
+  <h2 class="section-title"><span class="rank">4</span>Labor Market<span class="why">The confirmation signal — a cracking jobs number means something upstream is breaking.</span></h2>
+  <div class="charts-row">
+    <div class="card chart-card" style="grid-column: 1 / -1;">
       <div class="chart-head">
         <h3>Nonfarm payrolls, monthly change</h3>
         <span class="sub">thousands of jobs</span>
       </div>
       <div class="canvas-wrap"><canvas id="payrollsChart"></canvas></div>
-    </div>
-    <div class="card chart-card">
-      <div class="chart-head">
-        <h3>High-yield credit spread</h3>
-        <span class="sub">ICE BofA US HY OAS, daily, pp</span>
-      </div>
-      <div class="canvas-wrap"><canvas id="creditChart"></canvas></div>
     </div>
   </div>
   <div class="tile-grid" id="laborTileGrid" style="margin-top:12px;"></div>
@@ -266,7 +259,7 @@ function deltaDirectionGood(seriesId, delta) {
   // Whether an increase in this metric is generally "good" for a directional
   // color cue. Metrics with no clear good/bad framing stay neutral (muted).
   const upIsGood = { PAYEMS: true, A191RL1Q225SBEA: true };
-  const upIsBad  = { CPIAUCSL: true, PCEPILFE: true, UNRATE: true, ICSA: true, BAMLH0A0HYM2: true };
+  const upIsBad  = { CPIAUCSL: true, PCEPILFE: true, UNRATE: true, ICSA: true };
   if (delta === null || delta === undefined) return null;
   if (upIsGood[seriesId]) return delta >= 0 ? 'good' : 'bad';
   if (upIsBad[seriesId])  return delta >= 0 ? 'bad' : 'good';
@@ -495,26 +488,6 @@ async function main() {
         interaction:{ mode:'index', intersect:false },
         plugins:{ legend:{display:false}, tooltip:{ ...tooltipBase(), callbacks:{ label: c => ` M2 YoY: ${c.parsed.y.toFixed(1)}%` } } },
         scales: baseGrid('%')
-      },
-      plugins:[crosshair]
-    });
-  }
-
-  // ---------- Credit spread chart ----------
-  if (s.BAMLH0A0HYM2) {
-    const hist = s.BAMLH0A0HYM2.history;
-    new Chart(document.getElementById('creditChart'), {
-      type:'line',
-      data:{ labels: hist.map(p=>p.date), datasets:[{
-        data: hist.map(p=>p.value),
-        borderColor: PALETTE.red, backgroundColor: PALETTE.red + '22',
-        borderWidth:2, pointRadius:0, pointHoverRadius:5, tension:0.15, fill:true
-      }] },
-      options:{
-        responsive:true, maintainAspectRatio:false,
-        interaction:{ mode:'index', intersect:false },
-        plugins:{ legend:{display:false}, tooltip:{ ...tooltipBase(), callbacks:{ label: c => ` HY OAS: ${c.parsed.y.toFixed(2)}pp` } } },
-        scales: baseGrid('pp')
       },
       plugins:[crosshair]
     });

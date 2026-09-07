@@ -113,9 +113,6 @@ def build():
     add("VIXCLS", "CBOE Volatility Index", "index", "growth", daily_dates,
         make_walk(15, 0.0, 0.6, 260, floor=9, ceil=45))
 
-    add("BAMLH0A0HYM2", "High-Yield Credit Spread", "pp", "credit", daily_dates,
-        make_walk(3.2, 0.0, 0.08, 260, floor=1.5))
-
     payload = {
         "updated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "source": "Federal Reserve Bank of St. Louis (FRED)",

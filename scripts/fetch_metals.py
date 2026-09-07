@@ -61,27 +61,33 @@ def build():
     result = {}
     for symbol, meta in METALS.items():
         print(f"Fetching {symbol} ({meta['name']}) from Stooq...")
-        raw = fetch_csv(symbol)
-        points = parse_rows(raw)
-        if not points:
-            print(f"  WARNING: no usable rows for {symbol}")
+        try:
+            raw = fetch_csv(symbol)
+            points = parse_rows(raw)
+            if not points:
+                print(f"  WARNING: no usable rows for {symbol}")
+                continue
+
+            keep = meta["keep"]
+            trimmed = points[-keep:] if len(points) > keep else points
+            latest = trimmed[-1]
+            prev = trimmed[-2] if len(trimmed) > 1 else None
+
+            result[symbol] = {
+                "id": symbol,
+                "name": meta["name"],
+                "unit": meta["unit"],
+                "group": meta["group"],
+                "latest_date": latest["date"],
+                "latest_value": latest["value"],
+                "prev_value": prev["value"] if prev else None,
+                "history": trimmed,
+            }
+        except Exception as e:  # noqa: BLE001
+            # One symbol failing (Stooq hiccup, rate limit) shouldn't block
+            # the other, and shouldn't crash the whole workflow step.
+            print(f"  ERROR fetching {symbol}: {e}")
             continue
-
-        keep = meta["keep"]
-        trimmed = points[-keep:] if len(points) > keep else points
-        latest = trimmed[-1]
-        prev = trimmed[-2] if len(trimmed) > 1 else None
-
-        result[symbol] = {
-            "id": symbol,
-            "name": meta["name"],
-            "unit": meta["unit"],
-            "group": meta["group"],
-            "latest_date": latest["date"],
-            "latest_value": latest["value"],
-            "prev_value": prev["value"] if prev else None,
-            "history": trimmed,
-        }
         time.sleep(0.5)  # be polite to Stooq
 
     payload = {

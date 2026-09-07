@@ -6,14 +6,10 @@ market, ranked, plus gold and silver spot prices underneath:
 1. **Interest rates & Fed policy** — Fed funds rate, 2Y/10Y Treasury yields, the yield curve spread
 2. **Inflation** — CPI and core PCE, year-over-year
 3. **US dollar & liquidity** — the broad dollar index and M2 money supply
-4. **Credit spreads & labor market** — high-yield credit spread, nonfarm payrolls, unemployment, jobless claims
+4. **Labor market** — nonfarm payrolls, unemployment, jobless claims
 
-(Corporate earnings growth and oil were both considered and dropped.
-Earnings: the only free proxy, quarterly corporate profits from FRED,
-lags too much to be a useful timely signal next to the rest, which all
-update daily or weekly. Oil (`DCOILWTICO`) was pulled because its FRED
-fetch was breaking the scheduled update — see the note under "Metrics
-tracked" below if you want to try re-adding it.)
+(Corporate earnings growth, oil, and the high-yield credit spread were
+all tried and dropped — see "Metrics considered and dropped" below.)
 
 ...plus GDP growth and the VIX in the "everything else" strip, and gold &
 silver spot prices in their own section. Macro data comes from the
@@ -85,21 +81,32 @@ schedule.
 | Real GDP Growth, QoQ annualized | `A191RL1Q225SBEA` | Overall growth |
 | US Dollar Index (Broad) | `DTWEXBGS` | Cross-asset risk/liquidity proxy |
 | CBOE Volatility Index | `VIXCLS` | Equity risk/vol backdrop |
-| High-Yield Credit Spread | `BAMLH0A0HYM2` (ICE BofA US HY OAS) | Risk appetite / credit stress, confirms rate & labor stress |
 | Gold Spot | Stooq `XAUUSD` | Not FRED — pulled separately, no key needed |
 | Silver Spot | Stooq `XAGUSD` | Not FRED — pulled separately, no key needed |
 
-**Why oil got dropped:** the scheduled workflow was failing every run —
-`data/latest.json` never updated at all, even for the untouched original
-series, because `scripts/fetch_fred.py` raises and crashes before writing
-its output file if any single series fails to fetch. `DCOILWTICO` (WTI
-crude, added alongside credit spreads) was the new series most likely to
-be tripping that — possibly a FRED rate-limit on the larger series list,
-possibly something specific to that series. Removing it should let the
-rest of the pipeline (including gold/silver) update normally again. To
-re-add oil later, add `DCOILWTICO` back to `SERIES` in `fetch_fred.py`,
-then check the Actions tab's run log for the actual error before assuming
-it'll work.
+## Metrics considered and dropped
+
+- **Corporate earnings growth** (`CP`, corporate profits after tax) — the
+  only free proxy is quarterly and lags ~1 quarter, too stale to sit
+  next to daily/weekly series.
+- **Oil** (`DCOILWTICO`) — added, then removed after the scheduled
+  update stopped completing.
+- **High-yield credit spread** (`BAMLH0A0HYM2`) — added as oil's
+  replacement, then removed for the same reason: the scheduled update
+  still wasn't completing.
+
+Both oil and the credit spread were blamed in turn, but pulling oil
+alone didn't fix it — `data/latest.json` stayed frozen either way. The
+real bug was in `scripts/fetch_fred.py` itself: it raised and crashed
+*before writing anything* if a single series' fetch failed, so whichever
+series was newest took the entire file (and, since it's an earlier step
+in the same job, `data/metals.json` too) down with it. That's now fixed
+— a failed series is logged and skipped instead of crashing the script,
+and the "Commit updated data" and metals-fetch steps run even if the
+FRED step has a partial failure. If you want to re-add oil or the credit
+spread, put the series ID back in `SERIES` in `fetch_fred.py`; a bad
+fetch now just means that one card doesn't populate, not that nothing
+does.
 
 ## Customizing
 

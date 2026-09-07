@@ -38,9 +38,6 @@ SERIES = {
     "A191RL1Q225SBEA": {"name": "Real GDP Growth (QoQ ann.)", "unit": "%", "keep": 24, "group": "growth"},
     "DTWEXBGS":  {"name": "US Dollar Index (Broad)",   "unit": "index",   "keep": 260, "group": "growth"},
     "VIXCLS":    {"name": "CBOE Volatility Index",     "unit": "index",   "keep": 260, "group": "growth"},
-    # -- Added: credit spreads (rounds out the biggest drivers of the
-    #    stock market alongside rates/inflation/dollar) --
-    "BAMLH0A0HYM2": {"name": "High-Yield Credit Spread", "unit": "pp",    "keep": 260, "group": "credit"},
 }
 
 
@@ -114,35 +111,49 @@ def build():
         sys.exit(1)
 
     result = {}
+    failures = []
     for series_id, meta in SERIES.items():
         print(f"Fetching {series_id} ({meta['name']})...")
-        raw = clean(fetch_series(series_id, api_key))
-        transform = meta.get("transform")
-        if transform:
-            points = TRANSFORMS[transform](raw)
-        else:
-            points = raw
+        try:
+            raw = clean(fetch_series(series_id, api_key))
+            transform = meta.get("transform")
+            points = TRANSFORMS[transform](raw) if transform else raw
 
-        keep = meta["keep"]
-        trimmed = points[-keep:] if len(points) > keep else points
-        if not trimmed:
-            print(f"  WARNING: no usable observations for {series_id}", file=sys.stderr)
+            keep = meta["keep"]
+            trimmed = points[-keep:] if len(points) > keep else points
+            if not trimmed:
+                print(f"  WARNING: no usable observations for {series_id}", file=sys.stderr)
+                failures.append(series_id)
+                continue
+
+            latest = trimmed[-1]
+            prev = trimmed[-2] if len(trimmed) > 1 else None
+
+            result[series_id] = {
+                "id": series_id,
+                "name": meta["name"],
+                "unit": meta["unit"],
+                "group": meta["group"],
+                "latest_date": latest["date"],
+                "latest_value": latest["value"],
+                "prev_value": prev["value"] if prev else None,
+                "history": trimmed,
+            }
+        except Exception as e:  # noqa: BLE001
+            # A single bad/rate-limited series should never block every other
+            # series from updating — log it and keep going. The dashboard
+            # already handles a missing series gracefully (that card just
+            # doesn't render), which beats freezing the entire file.
+            print(f"  ERROR fetching {series_id}: {e}", file=sys.stderr)
+            failures.append(series_id)
             continue
-
-        latest = trimmed[-1]
-        prev = trimmed[-2] if len(trimmed) > 1 else None
-
-        result[series_id] = {
-            "id": series_id,
-            "name": meta["name"],
-            "unit": meta["unit"],
-            "group": meta["group"],
-            "latest_date": latest["date"],
-            "latest_value": latest["value"],
-            "prev_value": prev["value"] if prev else None,
-            "history": trimmed,
-        }
         time.sleep(0.2)  # be polite to the API
+
+    if failures:
+        print(f"Completed with {len(failures)} failed series: {', '.join(failures)}", file=sys.stderr)
+    if not result:
+        print("ERROR: every series failed — not overwriting data/latest.json.", file=sys.stderr)
+        sys.exit(1)
 
     payload = {
         "updated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
