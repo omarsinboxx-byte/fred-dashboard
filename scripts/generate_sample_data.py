@@ -113,6 +113,13 @@ def build():
     add("VIXCLS", "CBOE Volatility Index", "index", "growth", daily_dates,
         make_walk(15, 0.0, 0.6, 260, floor=9, ceil=45))
 
+    add("DCOILWTICO", "WTI Crude Oil", "$/bbl", "oil", daily_dates,
+        make_walk(72, 0.0, 1.1, 260, floor=35))
+    add("BAMLH0A0HYM2", "High-Yield Credit Spread", "pp", "credit", daily_dates,
+        make_walk(3.2, 0.0, 0.08, 260, floor=1.5))
+    add("CP", "Corporate Profits (YoY)", "%", "earnings", gdp_dates,
+        [5.0 + 3.0 * math.sin(i / 4) + random.gauss(0, 0.3) for i in range(len(gdp_dates))])
+
     payload = {
         "updated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "source": "Federal Reserve Bank of St. Louis (FRED)",
@@ -123,6 +130,32 @@ def build():
     with open(OUT_PATH, "w") as f:
         json.dump(payload, f, indent=2)
     print(f"Wrote sample data to {OUT_PATH}")
+
+    # ---------- Sample gold/silver (mirrors fetch_metals.py schema) ----------
+    metals = {}
+
+    def add_metal(sid, name, dates, values):
+        metals[sid] = {
+            "id": sid, "name": name, "unit": "$/oz", "group": "metals",
+            "latest_date": dates[-1].strftime("%Y-%m-%d"),
+            "latest_value": round(values[-1], 2),
+            "prev_value": round(values[-2], 2) if len(values) > 1 else None,
+            "history": with_dates(dates, values),
+        }
+
+    add_metal("XAUUSD", "Gold Spot", daily_dates, make_walk(2650, 0.5, 12, 260, floor=1500))
+    add_metal("XAGUSD", "Silver Spot", daily_dates, make_walk(31, 0.02, 0.4, 260, floor=10))
+
+    metals_payload = {
+        "updated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "source": "Stooq (stooq.com)",
+        "sample": True,
+        "series": metals,
+    }
+    metals_path = os.path.join(os.path.dirname(__file__), "..", "data", "metals.json")
+    with open(metals_path, "w") as f:
+        json.dump(metals_payload, f, indent=2)
+    print(f"Wrote sample data to {metals_path}")
 
 
 if __name__ == "__main__":

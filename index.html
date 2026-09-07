@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Macro Dashboard — FRED</title>
+<title>Macro Dashboard — FRED &amp; Metals</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <style>
   :root {
@@ -23,6 +23,8 @@
     --series-yellow:  #eda100;
     --series-violet:  #4a3aa7;
     --series-red:     #e34948;
+    --series-gold:    #b8860b;
+    --series-silver:  #7d8791;
     --good:           #006300;
     --bad:            #c1352f;
   }
@@ -43,6 +45,8 @@
       --series-yellow:  #c98500;
       --series-violet:  #9085e9;
       --series-red:     #e66767;
+      --series-gold:    #dcb13f;
+      --series-silver:  #b7bec5;
       --good:           #0ca30c;
       --bad:            #e66767;
     }
@@ -65,6 +69,10 @@
   #statusBanner { display:none; background:#fab21922; border:1px solid var(--border); color: var(--text-secondary); font-size:13px; padding:8px 12px; border-radius:8px; margin-bottom:16px; }
 
   h2.section-title { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--text-secondary); margin: 32px 0 12px; }
+  h2.section-title .rank { display:inline-block; font-size:12px; font-weight:700; letter-spacing:normal; text-transform:none; color: var(--surface-1); background: var(--text-secondary); border-radius:50%; width:18px; height:18px; line-height:18px; text-align:center; margin-right:8px; vertical-align:2px; }
+  h2.section-title .why { display:block; font-size:11.5px; font-weight:400; text-transform:none; letter-spacing:normal; color: var(--text-muted); margin-top:2px; }
+  .metal-hero .value { color: var(--series-gold); }
+  .metal-hero.silver .value { color: var(--series-silver); }
 
   .hero-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px; }
   .card {
@@ -120,7 +128,7 @@
   <header>
     <div>
       <h1>Macro Dashboard</h1>
-      <div class="meta">Fed policy, rates, inflation, labor &amp; risk — data from <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED</a>, Federal Reserve Bank of St. Louis</div>
+      <div class="meta">The 6 biggest drivers of the stock market, ranked — plus gold &amp; silver. Data from <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED</a> (Federal Reserve Bank of St. Louis) and <a href="https://stooq.com" target="_blank" rel="noopener">Stooq</a></div>
     </div>
     <div class="meta" id="updatedAt">Loading…</div>
   </header>
@@ -130,7 +138,7 @@
   <h2 class="section-title">Headline</h2>
   <div class="hero-grid" id="heroGrid"></div>
 
-  <h2 class="section-title">Rates &amp; the yield curve</h2>
+  <h2 class="section-title"><span class="rank">1</span>Interest Rates &amp; Fed Policy<span class="why">Sets the discount rate on every future dollar of earnings — the single biggest lever on equity valuations.</span></h2>
   <div class="charts-row">
     <div class="card chart-card">
       <div class="chart-head">
@@ -149,9 +157,9 @@
     </div>
   </div>
 
-  <h2 class="section-title">Inflation &amp; labor</h2>
-  <div class="charts-row-2">
-    <div class="card chart-card">
+  <h2 class="section-title"><span class="rank">2</span>Inflation<span class="why">Drives what the Fed does next — the market is really front-running this, not rates in isolation.</span></h2>
+  <div class="charts-row">
+    <div class="card chart-card" style="grid-column: 1 / -1;">
       <div class="chart-head">
         <h3>CPI vs. Core PCE, year-over-year</h3>
         <span class="sub">monthly, %</span>
@@ -159,12 +167,77 @@
       <div class="legend-row" id="inflationLegend"></div>
       <div class="canvas-wrap"><canvas id="inflationChart"></canvas></div>
     </div>
+  </div>
+
+  <h2 class="section-title"><span class="rank">3</span>Corporate Earnings Growth<span class="why">The fundamental floor under any rally — rates set the multiple, earnings set the "E".</span></h2>
+  <div class="charts-row">
+    <div class="card chart-card" style="grid-column: 1 / -1;">
+      <div class="chart-head">
+        <h3>Corporate profits after tax, year-over-year</h3>
+        <span class="sub">quarterly, %</span>
+      </div>
+      <div class="canvas-wrap"><canvas id="earningsChart"></canvas></div>
+    </div>
+  </div>
+
+  <h2 class="section-title"><span class="rank">4</span>US Dollar &amp; Liquidity<span class="why">A strong dollar tightens global financial conditions and hits multinational earnings.</span></h2>
+  <div class="charts-row-2">
+    <div class="card chart-card">
+      <div class="chart-head">
+        <h3>US Dollar Index (broad)</h3>
+        <span class="sub">daily, index</span>
+      </div>
+      <div class="canvas-wrap"><canvas id="dollarChart"></canvas></div>
+    </div>
+    <div class="card chart-card">
+      <div class="chart-head">
+        <h3>M2 money supply, year-over-year</h3>
+        <span class="sub">monthly, %</span>
+      </div>
+      <div class="canvas-wrap"><canvas id="m2Chart"></canvas></div>
+    </div>
+  </div>
+
+  <h2 class="section-title"><span class="rank">5</span>Oil<span class="why">Direct inflation input and a consumer-spending drag — episodic, but sharp when it moves.</span></h2>
+  <div class="charts-row">
+    <div class="card chart-card" style="grid-column: 1 / -1;">
+      <div class="chart-head">
+        <h3>WTI crude oil</h3>
+        <span class="sub">daily, $/barrel</span>
+      </div>
+      <div class="canvas-wrap"><canvas id="oilChart"></canvas></div>
+    </div>
+  </div>
+
+  <h2 class="section-title"><span class="rank">6</span>Credit Spreads &amp; Labor Market<span class="why">The confirmation signal — widening spreads or a cracking jobs number means something upstream is breaking.</span></h2>
+  <div class="charts-row-2">
     <div class="card chart-card">
       <div class="chart-head">
         <h3>Nonfarm payrolls, monthly change</h3>
         <span class="sub">thousands of jobs</span>
       </div>
       <div class="canvas-wrap"><canvas id="payrollsChart"></canvas></div>
+    </div>
+    <div class="card chart-card">
+      <div class="chart-head">
+        <h3>High-yield credit spread</h3>
+        <span class="sub">ICE BofA US HY OAS, daily, pp</span>
+      </div>
+      <div class="canvas-wrap"><canvas id="creditChart"></canvas></div>
+    </div>
+  </div>
+  <div class="tile-grid" id="laborTileGrid" style="margin-top:12px;"></div>
+
+  <h2 class="section-title">Gold &amp; Silver</h2>
+  <div class="hero-grid" id="metalsHeroGrid"></div>
+  <div class="charts-row" style="margin-top:12px;">
+    <div class="card chart-card" style="grid-column: 1 / -1;">
+      <div class="chart-head">
+        <h3>Gold vs. silver spot price</h3>
+        <span class="sub">daily, $/oz (separate scales)</span>
+      </div>
+      <div class="legend-row" id="metalsLegend"></div>
+      <div class="canvas-wrap"><canvas id="metalsChart"></canvas></div>
     </div>
   </div>
 
@@ -183,7 +256,7 @@
   </div>
 
   <footer>
-    Auto-refreshed by a scheduled GitHub Action against the FRED API. This is informational, not investment advice.
+    Auto-refreshed on a schedule by GitHub Actions — FRED API for macro series, Stooq for gold &amp; silver. This is informational, not investment advice.
   </footer>
 </div>
 
@@ -191,6 +264,7 @@
 const PALETTE = {
   blue: getVar('--series-blue'), orange: getVar('--series-orange'), aqua: getVar('--series-aqua'),
   yellow: getVar('--series-yellow'), violet: getVar('--series-violet'), red: getVar('--series-red'),
+  gold: getVar('--series-gold'), silver: getVar('--series-silver'),
   good: getVar('--good'), bad: getVar('--bad'),
   gridline: getVar('--gridline'), muted: getVar('--text-muted'), secondary: getVar('--text-secondary'),
   primary: getVar('--text-primary'), surface: getVar('--surface-1')
@@ -213,8 +287,8 @@ function fmtDate(d) {
 function deltaDirectionGood(seriesId, delta) {
   // Whether an increase in this metric is generally "good" for a directional
   // color cue. Metrics with no clear good/bad framing stay neutral (muted).
-  const upIsGood = { PAYEMS: true, A191RL1Q225SBEA: true };
-  const upIsBad  = { CPIAUCSL: true, PCEPILFE: true, UNRATE: true, ICSA: true };
+  const upIsGood = { PAYEMS: true, A191RL1Q225SBEA: true, CP: true };
+  const upIsBad  = { CPIAUCSL: true, PCEPILFE: true, UNRATE: true, ICSA: true, BAMLH0A0HYM2: true };
   if (delta === null || delta === undefined) return null;
   if (upIsGood[seriesId]) return delta >= 0 ? 'good' : 'bad';
   if (upIsBad[seriesId])  return delta >= 0 ? 'bad' : 'good';
@@ -280,7 +354,7 @@ const crosshair = {
 };
 
 async function main() {
-  let payload;
+  let payload, metalsPayload;
   try {
     const res = await fetch('data/latest.json', { cache: 'no-store' });
     payload = await res.json();
@@ -288,12 +362,19 @@ async function main() {
     document.getElementById('updatedAt').textContent = 'Could not load data/latest.json';
     return;
   }
+  try {
+    const mres = await fetch('data/metals.json', { cache: 'no-store' });
+    metalsPayload = await mres.json();
+  } catch (e) {
+    metalsPayload = null;
+  }
   const s = payload.series;
+  const m = metalsPayload ? metalsPayload.series : {};
   const updated = new Date(payload.updated_utc);
   document.getElementById('updatedAt').textContent = 'Updated ' + updated.toLocaleString('en-US', { dateStyle:'medium', timeStyle:'short' });
 
   const bannerEl = document.getElementById('statusBanner');
-  if (payload.sample) {
+  if (payload.sample || (metalsPayload && metalsPayload.sample)) {
     bannerEl.style.display = 'block';
     bannerEl.textContent = 'Showing sample data. Add a FRED_API_KEY secret and run the update workflow to pull live numbers.';
   }
@@ -401,6 +482,172 @@ async function main() {
     });
   }
 
+  // ---------- Corporate earnings growth chart ----------
+  if (s.CP) {
+    const hist = s.CP.history;
+    new Chart(document.getElementById('earningsChart'), {
+      type:'line',
+      data:{ labels: hist.map(p=>p.date), datasets:[{
+        data: hist.map(p=>p.value),
+        borderColor: PALETTE.aqua, backgroundColor: PALETTE.aqua + '22',
+        borderWidth:2, pointRadius:0, pointHoverRadius:5, tension:0.2, fill:true
+      }] },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:'index', intersect:false },
+        plugins:{ legend:{display:false}, tooltip:{ ...tooltipBase(), callbacks:{ label: c => ` Corporate profits YoY: ${c.parsed.y.toFixed(1)}%` } } },
+        scales: baseGrid('%')
+      },
+      plugins:[crosshair]
+    });
+  }
+
+  // ---------- US Dollar Index chart ----------
+  if (s.DTWEXBGS) {
+    const hist = s.DTWEXBGS.history;
+    new Chart(document.getElementById('dollarChart'), {
+      type:'line',
+      data:{ labels: hist.map(p=>p.date), datasets:[{
+        data: hist.map(p=>p.value),
+        borderColor: PALETTE.blue, backgroundColor: PALETTE.blue,
+        borderWidth:2, pointRadius:0, pointHoverRadius:5, tension:0.15
+      }] },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:'index', intersect:false },
+        plugins:{ legend:{display:false}, tooltip:{ ...tooltipBase(), callbacks:{ label: c => ` Dollar index: ${c.parsed.y.toFixed(1)}` } } },
+        scales: baseGrid('')
+      },
+      plugins:[crosshair]
+    });
+  }
+
+  // ---------- M2 money supply chart ----------
+  if (s.M2SL) {
+    const hist = s.M2SL.history;
+    new Chart(document.getElementById('m2Chart'), {
+      type:'line',
+      data:{ labels: hist.map(p=>p.date), datasets:[{
+        data: hist.map(p=>p.value),
+        borderColor: PALETTE.violet, backgroundColor: PALETTE.violet + '22',
+        borderWidth:2, pointRadius:0, pointHoverRadius:5, tension:0.2, fill:true
+      }] },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:'index', intersect:false },
+        plugins:{ legend:{display:false}, tooltip:{ ...tooltipBase(), callbacks:{ label: c => ` M2 YoY: ${c.parsed.y.toFixed(1)}%` } } },
+        scales: baseGrid('%')
+      },
+      plugins:[crosshair]
+    });
+  }
+
+  // ---------- Oil chart ----------
+  if (s.DCOILWTICO) {
+    const hist = s.DCOILWTICO.history;
+    new Chart(document.getElementById('oilChart'), {
+      type:'line',
+      data:{ labels: hist.map(p=>p.date), datasets:[{
+        data: hist.map(p=>p.value),
+        borderColor: PALETTE.orange, backgroundColor: PALETTE.orange + '22',
+        borderWidth:2, pointRadius:0, pointHoverRadius:5, tension:0.15, fill:true
+      }] },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:'index', intersect:false },
+        plugins:{ legend:{display:false}, tooltip:{ ...tooltipBase(), callbacks:{ label: c => ` WTI: $${c.parsed.y.toFixed(2)}/bbl` } } },
+        scales: baseGrid('')
+      },
+      plugins:[crosshair]
+    });
+  }
+
+  // ---------- Credit spread chart ----------
+  if (s.BAMLH0A0HYM2) {
+    const hist = s.BAMLH0A0HYM2.history;
+    new Chart(document.getElementById('creditChart'), {
+      type:'line',
+      data:{ labels: hist.map(p=>p.date), datasets:[{
+        data: hist.map(p=>p.value),
+        borderColor: PALETTE.red, backgroundColor: PALETTE.red + '22',
+        borderWidth:2, pointRadius:0, pointHoverRadius:5, tension:0.15, fill:true
+      }] },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:'index', intersect:false },
+        plugins:{ legend:{display:false}, tooltip:{ ...tooltipBase(), callbacks:{ label: c => ` HY OAS: ${c.parsed.y.toFixed(2)}pp` } } },
+        scales: baseGrid('pp')
+      },
+      plugins:[crosshair]
+    });
+  }
+
+  // ---------- Labor tile grid (UNRATE, ICSA) ----------
+  {
+    const laborIds = ['UNRATE','ICSA'];
+    const grid = document.getElementById('laborTileGrid');
+    laborIds.forEach(id => {
+      const d = s[id]; if (!d) return;
+      const el = document.createElement('div');
+      el.className = 'card tile';
+      el.innerHTML = `
+        <div class="label">${d.name}</div>
+        <div class="row">
+          <div>
+            <div class="value">${fmtCompact(d.latest_value)}<span class="unit">${d.unit}</span></div>
+            ${deltaHTML(id, d.latest_value, d.prev_value)}
+          </div>
+          <div class="spark">${sparklineSVG(d.history.slice(-24), 96, 32)}</div>
+        </div>`;
+      grid.appendChild(el);
+    });
+  }
+
+  // ---------- Gold & Silver ----------
+  if (m.XAUUSD || m.XAGUSD) {
+    const heroGrid2 = document.getElementById('metalsHeroGrid');
+    [['XAUUSD','gold'],['XAGUSD','silver']].forEach(([id, cls]) => {
+      const d = m[id]; if (!d) return;
+      const el = document.createElement('div');
+      el.className = `card hero-card metal-hero ${cls}`;
+      el.innerHTML = `
+        <div class="label">${d.name}</div>
+        <div class="value">$${d.latest_value.toFixed(2)}<span class="unit">${d.unit.replace('$','')}</span></div>
+        ${deltaHTML(id, d.latest_value, d.prev_value)}
+        <div class="asof">as of ${fmtDate(d.latest_date)}</div>`;
+      heroGrid2.appendChild(el);
+    });
+  }
+  if (m.XAUUSD && m.XAGUSD) {
+    const legend = document.getElementById('metalsLegend');
+    legend.innerHTML = `
+      <span class="item"><span class="swatch" style="background:${PALETTE.gold}"></span>Gold ($/oz, left axis)</span>
+      <span class="item"><span class="swatch" style="background:${PALETTE.silver}"></span>Silver ($/oz, right axis)</span>`;
+    const goldColor = PALETTE.gold;
+    const silverColor = PALETTE.silver;
+    const labels = m.XAUUSD.history.map(p=>p.date);
+    new Chart(document.getElementById('metalsChart'), {
+      type:'line',
+      data:{ labels, datasets:[
+        { label:'Gold', yAxisID:'y', data: m.XAUUSD.history.map(p=>p.value),
+          borderColor: goldColor, backgroundColor: goldColor, borderWidth:2, pointRadius:0, pointHoverRadius:5, tension:0.15 },
+        { label:'Silver', yAxisID:'y1', data: m.XAGUSD.history.map(p=>p.value),
+          borderColor: silverColor, backgroundColor: silverColor, borderWidth:2, pointRadius:0, pointHoverRadius:5, tension:0.15 }
+      ]},
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:'index', intersect:false },
+        plugins:{ legend:{display:false}, tooltip:{ ...tooltipBase(), callbacks:{ label: c => ` ${c.dataset.label}: $${c.parsed.y.toFixed(2)}/oz` } } },
+        scales:{
+          x: baseGrid().x,
+          y:  { position:'left',  grid:{ color: PALETTE.gridline, drawTicks:false }, border:{display:false}, ticks:{ color: goldColor, font:{size:11}, callback: v => `$${v}` } },
+          y1: { position:'right', grid:{ display:false }, border:{display:false}, ticks:{ color: silverColor, font:{size:11}, callback: v => `$${v}` } }
+        }
+      },
+      plugins:[crosshair]
+    });
+  }
+
   // ---------- Payrolls diverging bar chart ----------
   if (s.PAYEMS) {
     const hist = s.PAYEMS.history;
@@ -421,7 +668,7 @@ async function main() {
   }
 
   // ---------- Everything-else tile grid ----------
-  const restIds = ['DGS2','DGS10','PCEPILFE','PAYEMS','ICSA','M2SL','A191RL1Q225SBEA','DTWEXBGS','VIXCLS'];
+  const restIds = ['DGS2','DGS10','PCEPILFE','A191RL1Q225SBEA','VIXCLS'];
   const tileGrid = document.getElementById('tileGrid');
   restIds.forEach(id => {
     const d = s[id]; if (!d) return;
@@ -442,7 +689,7 @@ async function main() {
   // ---------- Data table (accessibility fallback) ----------
   const tbody = document.querySelector('#dataTable tbody');
   const tblNum = n => n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  Object.values(s).forEach(d => {
+  Object.values(s).concat(Object.values(m)).forEach(d => {
     let delta = (d.prev_value !== null && d.prev_value !== undefined) ? (d.latest_value - d.prev_value) : null;
     if (delta !== null && Math.abs(delta) < 0.005) delta = 0;
     const tr = document.createElement('tr');

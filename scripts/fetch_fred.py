@@ -38,6 +38,11 @@ SERIES = {
     "A191RL1Q225SBEA": {"name": "Real GDP Growth (QoQ ann.)", "unit": "%", "keep": 24, "group": "growth"},
     "DTWEXBGS":  {"name": "US Dollar Index (Broad)",   "unit": "index",   "keep": 260, "group": "growth"},
     "VIXCLS":    {"name": "CBOE Volatility Index",     "unit": "index",   "keep": 260, "group": "growth"},
+    # -- Added: oil, credit spreads, corporate earnings (rounds out the 6
+    #    biggest drivers of the stock market alongside rates/inflation/dollar) --
+    "DCOILWTICO": {"name": "WTI Crude Oil",            "unit": "$/bbl",   "keep": 260, "group": "oil"},
+    "BAMLH0A0HYM2": {"name": "High-Yield Credit Spread", "unit": "pp",    "keep": 260, "group": "credit"},
+    "CP":        {"name": "Corporate Profits (YoY)",   "unit": "%",       "keep": 24,  "group": "earnings", "transform": "yoy_pct_q"},
 }
 
 
@@ -97,9 +102,22 @@ def transform_mom_diff(points):
     return out
 
 
+def transform_yoy_pct_q(points):
+    """Year-over-year % change for a quarterly series (4-period lag)."""
+    out = []
+    for i in range(4, len(points)):
+        prev, cur = points[i - 4], points[i]
+        if prev["value"] == 0:
+            continue
+        pct = (cur["value"] / prev["value"] - 1.0) * 100.0
+        out.append({"date": cur["date"], "value": round(pct, 2)})
+    return out
+
+
 TRANSFORMS = {
     "yoy_pct": transform_yoy_pct,
     "mom_diff": transform_mom_diff,
+    "yoy_pct_q": transform_yoy_pct_q,
 }
 
 

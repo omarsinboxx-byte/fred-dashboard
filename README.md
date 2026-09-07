@@ -1,14 +1,24 @@
-# Macro Dashboard (FRED)
+# Macro Dashboard (FRED + gold/silver)
 
-A self-contained dashboard tracking the macro metrics that matter most for
-rates, inflation, labor, and risk — Fed funds rate, the 2Y/10Y yield curve,
-CPI, core PCE, unemployment, payrolls, jobless claims, M2, GDP growth, the
-dollar index, and the VIX. Data comes straight from the [FRED API](https://fred.stlouisfed.org/)
-(Federal Reserve Bank of St. Louis) and refreshes on a schedule via GitHub
-Actions — no server, no build step, just a static page.
+A self-contained dashboard tracking the 6 biggest drivers of the stock
+market, ranked, plus gold and silver spot prices underneath:
 
-Right now `data/latest.json` holds **sample data** so the dashboard has
-something to show. Follow the steps below to point it at live FRED numbers.
+1. **Interest rates & Fed policy** — Fed funds rate, 2Y/10Y Treasury yields, the yield curve spread
+2. **Inflation** — CPI and core PCE, year-over-year
+3. **Corporate earnings growth** — corporate profits after tax, year-over-year
+4. **US dollar & liquidity** — the broad dollar index and M2 money supply
+5. **Oil** — WTI crude spot price
+6. **Credit spreads & labor market** — high-yield credit spread, nonfarm payrolls, unemployment, jobless claims
+
+...plus GDP growth and the VIX in the "everything else" strip, and gold &
+silver spot prices in their own section. Macro data comes from the
+[FRED API](https://fred.stlouisfed.org/) (Federal Reserve Bank of St. Louis);
+gold/silver come from [Stooq](https://stooq.com) (free, no key needed).
+Both refresh on a schedule via GitHub Actions — no server, no build step,
+just a static page.
+
+`data/metals.json` ships with **sample data** until the workflow runs once
+live. Follow the steps below to point everything at live numbers.
 
 ## 1. Get a free FRED API key
 
@@ -37,19 +47,21 @@ dashboard.
 ## 4. Run the update workflow once
 
 **Actions tab → "Update FRED data" → Run workflow.** This pulls real
-numbers into `data/latest.json` and commits them, which redeploys the
-Pages site automatically. After that it keeps running on its own schedule
-(weekday mornings, US time) — see `.github/workflows/update.yml` to change
-the cron schedule.
+numbers into `data/latest.json` (FRED) and `data/metals.json` (gold/silver,
+no key needed) and commits them, which redeploys the Pages site
+automatically. After that it keeps running on its own schedule (weekday
+mornings, US time) — see `.github/workflows/update.yml` to change the cron
+schedule.
 
 ## How it's put together
 
 | File | Purpose |
 |---|---|
-| `index.html` | The dashboard itself — plain HTML/CSS/JS, no build step, reads `data/latest.json` |
-| `scripts/fetch_fred.py` | Pulls the series list below from FRED, computes YoY/MoM derived values, writes `data/latest.json` |
-| `scripts/generate_sample_data.py` | Produces the placeholder sample data (`data/latest.json` with `"sample": true`) |
-| `.github/workflows/update.yml` | Scheduled + manually-triggerable Action that runs the fetch script and commits the result |
+| `index.html` | The dashboard itself — plain HTML/CSS/JS, no build step, reads `data/latest.json` and `data/metals.json` |
+| `scripts/fetch_fred.py` | Pulls the FRED series below, computes YoY/MoM derived values, writes `data/latest.json` |
+| `scripts/fetch_metals.py` | Pulls gold & silver spot prices from Stooq (no key needed), writes `data/metals.json` |
+| `scripts/generate_sample_data.py` | Produces placeholder sample data for both files (each flagged `"sample": true`) |
+| `.github/workflows/update.yml` | Scheduled + manually-triggerable Action that runs both fetch scripts and commits the result |
 
 ## Metrics tracked
 
@@ -68,6 +80,11 @@ the cron schedule.
 | Real GDP Growth, QoQ annualized | `A191RL1Q225SBEA` | Overall growth |
 | US Dollar Index (Broad) | `DTWEXBGS` | Cross-asset risk/liquidity proxy |
 | CBOE Volatility Index | `VIXCLS` | Equity risk/vol backdrop |
+| WTI Crude Oil | `DCOILWTICO` | Inflation input + consumer spending drag |
+| High-Yield Credit Spread | `BAMLH0A0HYM2` (ICE BofA US HY OAS) | Risk appetite / credit stress, confirms rate & labor stress |
+| Corporate Profits, year-over-year | `CP` (derived) | Earnings growth proxy — the fundamental floor under valuations |
+| Gold Spot | Stooq `XAUUSD` | Not FRED — pulled separately, no key needed |
+| Silver Spot | Stooq `XAGUSD` | Not FRED — pulled separately, no key needed |
 
 ## Customizing
 
