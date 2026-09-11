@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-09-10T15:53:08Z",
+  "updated_utc": "2026-09-11T15:54:57Z",
   "source": "Federal Reserve Bank of St. Louis (FRED)",
   "series": {
     "DFF": {
@@ -7,14 +7,10 @@
       "name": "Effective Fed Funds Rate",
       "unit": "%",
       "group": "rates",
-      "latest_date": "2026-09-08",
+      "latest_date": "2026-09-09",
       "latest_value": 3.63,
       "prev_value": 3.63,
       "history": [
-        {
-          "date": "2025-12-23",
-          "value": 3.64
-        },
         {
           "date": "2025-12-24",
           "value": 3.64
@@ -1050,6 +1046,10 @@
         {
           "date": "2026-09-08",
           "value": 3.63
+        },
+        {
+          "date": "2026-09-09",
+          "value": 3.63
         }
       ]
     },
@@ -1058,14 +1058,10 @@
       "name": "2-Year Treasury Yield",
       "unit": "%",
       "group": "rates",
-      "latest_date": "2026-09-08",
-      "latest_value": 4.39,
-      "prev_value": 4.37,
+      "latest_date": "2026-09-09",
+      "latest_value": 4.43,
+      "prev_value": 4.39,
       "history": [
-        {
-          "date": "2025-08-25",
-          "value": 3.73
-        },
         {
           "date": "2025-08-26",
           "value": 3.61
@@ -2101,6 +2097,10 @@
         {
           "date": "2026-09-08",
           "value": 4.39
+        },
+        {
+          "date": "2026-09-09",
+          "value": 4.43
         }
       ]
     },
@@ -2109,14 +2109,10 @@
       "name": "10-Year Treasury Yield",
       "unit": "%",
       "group": "rates",
-      "latest_date": "2026-09-08",
-      "latest_value": 4.8,
-      "prev_value": 4.78,
+      "latest_date": "2026-09-09",
+      "latest_value": 4.83,
+      "prev_value": 4.8,
       "history": [
-        {
-          "date": "2025-08-25",
-          "value": 4.28
-        },
         {
           "date": "2025-08-26",
           "value": 4.26
@@ -3152,6 +3148,10 @@
         {
           "date": "2026-09-08",
           "value": 4.8
+        },
+        {
+          "date": "2026-09-09",
+          "value": 4.83
         }
       ]
     },
@@ -3160,14 +3160,10 @@
       "name": "10Y-2Y Treasury Spread",
       "unit": "pp",
       "group": "rates",
-      "latest_date": "2026-09-09",
-      "latest_value": 0.4,
-      "prev_value": 0.41,
+      "latest_date": "2026-09-10",
+      "latest_value": 0.39,
+      "prev_value": 0.4,
       "history": [
-        {
-          "date": "2025-08-26",
-          "value": 0.65
-        },
         {
           "date": "2025-08-27",
           "value": 0.65
@@ -4203,6 +4199,10 @@
         {
           "date": "2026-09-09",
           "value": 0.4
+        },
+        {
+          "date": "2026-09-10",
+          "value": 0.39
         }
       ]
     },
@@ -4211,14 +4211,10 @@
       "name": "CPI (YoY)",
       "unit": "%",
       "group": "inflation",
-      "latest_date": "2026-07-01",
-      "latest_value": 3.54,
-      "prev_value": 3.73,
+      "latest_date": "2026-08-01",
+      "latest_value": 3.71,
+      "prev_value": 3.54,
       "history": [
-        {
-          "date": "2023-07-01",
-          "value": 3.29
-        },
         {
           "date": "2023-08-01",
           "value": 3.72
@@ -4358,6 +4354,10 @@
         {
           "date": "2026-07-01",
           "value": 3.54
+        },
+        {
+          "date": "2026-08-01",
+          "value": 3.71
         }
       ]
     },
@@ -6363,14 +6363,10 @@
       "name": "CBOE Volatility Index",
       "unit": "index",
       "group": "growth",
-      "latest_date": "2026-09-09",
-      "latest_value": 16.46,
-      "prev_value": 15.72,
+      "latest_date": "2026-09-10",
+      "latest_value": 17.84,
+      "prev_value": 16.46,
       "history": [
-        {
-          "date": "2025-09-08",
-          "value": 15.11
-        },
         {
           "date": "2025-09-09",
           "value": 15.04
@@ -7406,6 +7402,10 @@
         {
           "date": "2026-09-09",
           "value": 16.46
+        },
+        {
+          "date": "2026-09-10",
+          "value": 17.84
         }
       ]
     }
