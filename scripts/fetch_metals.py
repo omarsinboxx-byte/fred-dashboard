@@ -1,69 +1,79 @@
 #!/usr/bin/env python3
 """
-Pull spot gold and silver prices (USD/oz) from Stooq's free, keyless daily
-CSV endpoint and write data/metals.json for the dashboard (index.html) to
-render alongside the FRED macro series.
+Pull gold and silver prices (USD/oz, COMEX front-month futures used as a
+spot-price proxy) from Yahoo Finance's public chart endpoint and write
+data/metals.json for the dashboard (index.html) to render alongside the
+FRED macro series.
 
-No API key required. Stooq symbols used:
-    XAUUSD  -> spot gold, USD per troy ounce
-    XAGUSD  -> spot silver, USD per troy ounce
+No API key required.
+
+Background: this previously scraped Stooq's keyless CSV endpoint
+(stooq.com/q/d/l/), but Stooq now gates that endpoint behind a
+JavaScript proof-of-work challenge that a plain HTTP client can't solve,
+so every fetch silently returned zero rows and data/metals.json ended up
+with an empty "series". Yahoo's chart API returns JSON directly with no
+such gate.
+
+Yahoo Finance symbols used:
+    GC=F  -> COMEX gold futures (front month), USD per troy ounce
+    SI=F  -> COMEX silver futures (front month), USD per troy ounce
+Stored in the output under the XAUUSD / XAGUSD keys the dashboard expects.
 
 Usage:
     python scripts/fetch_metals.py
 """
-import csv
-import io
 import json
 import os
 import time
 import urllib.request
-import urllib.error
 from datetime import datetime, timezone
 
-STOOQ_URL = "https://stooq.com/q/d/l/?s={symbol}&i=d"
-OUT_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "metals.json")
+CHART_URL = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?range=1y&interval=1d"
 
 METALS = {
-    "XAUUSD": {"name": "Gold Spot", "unit": "$/oz", "group": "metals", "keep": 260},
-    "XAGUSD": {"name": "Silver Spot", "unit": "$/oz", "group": "metals", "keep": 260},
+    "XAUUSD": {"yahoo_symbol": "GC=F", "name": "Gold (COMEX front month)", "unit": "$/oz", "group": "metals", "keep": 260},
+    "XAGUSD": {"yahoo_symbol": "SI=F", "name": "Silver (COMEX front month)", "unit": "$/oz", "group": "metals", "keep": 260},
 }
 
+OUT_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "metals.json")
 
-def fetch_csv(symbol, retries=3):
-    url = STOOQ_URL.format(symbol=symbol.lower())
+def fetch_chart(symbol, retries=3):
+    url = CHART_URL.format(symbol=symbol)
     last_err = None
     for attempt in range(retries):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
             with urllib.request.urlopen(req, timeout=30) as resp:
-                return resp.read().decode("utf-8")
+                return json.loads(resp.read().decode("utf-8"))
         except Exception as e:  # noqa: BLE001
             last_err = e
             time.sleep(1.5 * (attempt + 1))
     raise RuntimeError(f"Failed to fetch {symbol}: {last_err}")
 
-
-def parse_rows(raw_csv):
-    """Stooq daily CSV: Date,Open,High,Low,Close,Volume"""
+def parse_points(payload):
+    result = payload.get("chart", {}).get("result") or []
+    if not result:
+        return []
+    r = result[0]
+    timestamps = r.get("timestamp") or []
+    quotes = (r.get("indicators", {}).get("quote") or [{}])[0]
+    closes = quotes.get("close") or []
     out = []
-    reader = csv.DictReader(io.StringIO(raw_csv))
-    for row in reader:
-        try:
-            date = row["Date"]
-            close = float(row["Close"])
-        except (KeyError, ValueError, TypeError):
+    for ts, close in zip(timestamps, closes):
+        if close is None:
             continue
-        out.append({"date": date, "value": round(close, 2)})
+        d = datetime.fromtimestamp(ts, tz=timezone.utc).date()
+        out.append({"date": d.strftime("%Y-%m-%d"), "value": round(float(close), 2)})
     return out
-
 
 def build():
     result = {}
-    for symbol, meta in METALS.items():
-        print(f"Fetching {symbol} ({meta['name']}) from Stooq...")
+    for key, meta in METALS.items():
+        symbol = meta["yahoo_symbol"]
+        print(f"Fetching {symbol} ({meta['name']}) from Yahoo Finance...")
         try:
-            raw = fetch_csv(symbol)
-            points = parse_rows(raw)
+            payload = fetch_chart(symbol)
+            points = parse_points(payload)
             if not points:
                 print(f"  WARNING: no usable rows for {symbol}")
                 continue
@@ -73,8 +83,8 @@ def build():
             latest = trimmed[-1]
             prev = trimmed[-2] if len(trimmed) > 1 else None
 
-            result[symbol] = {
-                "id": symbol,
+            result[key] = {
+                "id": key,
                 "name": meta["name"],
                 "unit": meta["unit"],
                 "group": meta["group"],
@@ -84,23 +94,20 @@ def build():
                 "history": trimmed,
             }
         except Exception as e:  # noqa: BLE001
-            # One symbol failing (Stooq hiccup, rate limit) shouldn't block
-            # the other, and shouldn't crash the whole workflow step.
             print(f"  ERROR fetching {symbol}: {e}")
             continue
-        time.sleep(0.5)  # be polite to Stooq
+        time.sleep(0.5)
 
-    payload = {
+    payload_out = {
         "updated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "source": "Stooq (stooq.com)",
+        "source": "Yahoo Finance (COMEX front-month futures, GC=F / SI=F)",
         "series": result,
     }
 
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
     with open(OUT_PATH, "w") as f:
-        json.dump(payload, f, indent=2)
+        json.dump(payload_out, f, indent=2)
     print(f"Wrote {OUT_PATH}")
-
 
 if __name__ == "__main__":
     build()
