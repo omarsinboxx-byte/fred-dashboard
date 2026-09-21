@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-09-18T15:53:23Z",
+  "updated_utc": "2026-09-21T17:54:05Z",
   "source": "Federal Reserve Bank of St. Louis (FRED)",
   "series": {
     "DFF": {
@@ -7,14 +7,10 @@
       "name": "Effective Fed Funds Rate",
       "unit": "%",
       "group": "rates",
-      "latest_date": "2026-09-16",
-      "latest_value": 3.63,
+      "latest_date": "2026-09-17",
+      "latest_value": 3.88,
       "prev_value": 3.63,
       "history": [
-        {
-          "date": "2025-12-31",
-          "value": 3.64
-        },
         {
           "date": "2026-01-01",
           "value": 3.64
@@ -1050,6 +1046,10 @@
         {
           "date": "2026-09-16",
           "value": 3.63
+        },
+        {
+          "date": "2026-09-17",
+          "value": 3.88
         }
       ]
     },
@@ -1058,14 +1058,10 @@
       "name": "2-Year Treasury Yield",
       "unit": "%",
       "group": "rates",
-      "latest_date": "2026-09-16",
-      "latest_value": 4.74,
-      "prev_value": 4.67,
+      "latest_date": "2026-09-17",
+      "latest_value": 4.67,
+      "prev_value": 4.74,
       "history": [
-        {
-          "date": "2025-09-03",
-          "value": 3.61
-        },
         {
           "date": "2025-09-04",
           "value": 3.59
@@ -2101,6 +2097,10 @@
         {
           "date": "2026-09-16",
           "value": 4.74
+        },
+        {
+          "date": "2026-09-17",
+          "value": 4.67
         }
       ]
     },
@@ -2109,14 +2109,10 @@
       "name": "10-Year Treasury Yield",
       "unit": "%",
       "group": "rates",
-      "latest_date": "2026-09-16",
-      "latest_value": 5.01,
-      "prev_value": 5.0,
+      "latest_date": "2026-09-17",
+      "latest_value": 4.94,
+      "prev_value": 5.01,
       "history": [
-        {
-          "date": "2025-09-03",
-          "value": 4.22
-        },
         {
           "date": "2025-09-04",
           "value": 4.17
@@ -3152,6 +3148,10 @@
         {
           "date": "2026-09-16",
           "value": 5.01
+        },
+        {
+          "date": "2026-09-17",
+          "value": 4.94
         }
       ]
     },
@@ -3160,14 +3160,10 @@
       "name": "10Y-2Y Treasury Spread",
       "unit": "pp",
       "group": "rates",
-      "latest_date": "2026-09-17",
-      "latest_value": 0.27,
+      "latest_date": "2026-09-18",
+      "latest_value": 0.25,
       "prev_value": 0.27,
       "history": [
-        {
-          "date": "2025-09-04",
-          "value": 0.58
-        },
         {
           "date": "2025-09-05",
           "value": 0.59
@@ -4203,6 +4199,10 @@
         {
           "date": "2026-09-17",
           "value": 0.27
+        },
+        {
+          "date": "2026-09-18",
+          "value": 0.25
         }
       ]
     },
@@ -6363,14 +6363,10 @@
       "name": "CBOE Volatility Index",
       "unit": "index",
       "group": "growth",
-      "latest_date": "2026-09-17",
-      "latest_value": 15.44,
-      "prev_value": 17.71,
+      "latest_date": "2026-09-18",
+      "latest_value": 14.81,
+      "prev_value": 15.44,
       "history": [
-        {
-          "date": "2025-09-16",
-          "value": 16.36
-        },
         {
           "date": "2025-09-17",
           "value": 15.72
@@ -7406,6 +7402,10 @@
         {
           "date": "2026-09-17",
           "value": 15.44
+        },
+        {
+          "date": "2026-09-18",
+          "value": 14.81
         }
       ]
     }
