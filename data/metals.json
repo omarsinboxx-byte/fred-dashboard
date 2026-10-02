@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-10-01T18:04:38Z",
+  "updated_utc": "2026-10-02T17:31:04Z",
   "source": "Yahoo Finance (COMEX front-month futures, GC=F / SI=F)",
   "series": {
     "XAUUSD": {
@@ -7,14 +7,10 @@
       "name": "Gold (COMEX front month)",
       "unit": "$/oz",
       "group": "metals",
-      "latest_date": "2026-10-01",
-      "latest_value": 4205.0,
-      "prev_value": 4186.7,
+      "latest_date": "2026-10-02",
+      "latest_value": 4167.2,
+      "prev_value": 4202.3,
       "history": [
-        {
-          "date": "2025-10-01",
-          "value": 3897.5
-        },
         {
           "date": "2025-10-02",
           "value": 3868.1
@@ -1017,7 +1013,11 @@
         },
         {
           "date": "2026-10-01",
-          "value": 4205.0
+          "value": 4202.3
+        },
+        {
+          "date": "2026-10-02",
+          "value": 4167.2
         }
       ]
     },
@@ -1026,14 +1026,10 @@
       "name": "Silver (COMEX front month)",
       "unit": "$/oz",
       "group": "metals",
-      "latest_date": "2026-10-01",
-      "latest_value": 61.1,
-      "prev_value": 60.1,
+      "latest_date": "2026-10-02",
+      "latest_value": 60.53,
+      "prev_value": 60.72,
       "history": [
-        {
-          "date": "2025-10-01",
-          "value": 47.29
-        },
         {
           "date": "2025-10-02",
           "value": 46.0
@@ -2036,7 +2032,11 @@
         },
         {
           "date": "2026-10-01",
-          "value": 61.1
+          "value": 60.72
+        },
+        {
+          "date": "2026-10-02",
+          "value": 60.53
         }
       ]
     }
