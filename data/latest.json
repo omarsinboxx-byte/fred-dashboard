@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-10-07T18:28:18Z",
+  "updated_utc": "2026-10-08T18:27:33Z",
   "source": "Federal Reserve Bank of St. Louis (FRED)",
   "series": {
     "DFF": {
@@ -7,14 +7,10 @@
       "name": "Effective Fed Funds Rate",
       "unit": "%",
       "group": "rates",
-      "latest_date": "2026-10-05",
+      "latest_date": "2026-10-06",
       "latest_value": 3.88,
       "prev_value": 3.88,
       "history": [
-        {
-          "date": "2026-01-19",
-          "value": 3.64
-        },
         {
           "date": "2026-01-20",
           "value": 3.64
@@ -1050,6 +1046,10 @@
         {
           "date": "2026-10-05",
           "value": 3.88
+        },
+        {
+          "date": "2026-10-06",
+          "value": 3.88
         }
       ]
     },
@@ -1058,14 +1058,10 @@
       "name": "2-Year Treasury Yield",
       "unit": "%",
       "group": "rates",
-      "latest_date": "2026-10-05",
-      "latest_value": 4.84,
-      "prev_value": 4.83,
+      "latest_date": "2026-10-06",
+      "latest_value": 4.79,
+      "prev_value": 4.84,
       "history": [
-        {
-          "date": "2025-09-22",
-          "value": 3.61
-        },
         {
           "date": "2025-09-23",
           "value": 3.53
@@ -2101,6 +2097,10 @@
         {
           "date": "2026-10-05",
           "value": 4.84
+        },
+        {
+          "date": "2026-10-06",
+          "value": 4.79
         }
       ]
     },
@@ -2109,14 +2109,10 @@
       "name": "10-Year Treasury Yield",
       "unit": "%",
       "group": "rates",
-      "latest_date": "2026-10-05",
-      "latest_value": 5.31,
-      "prev_value": 5.28,
+      "latest_date": "2026-10-06",
+      "latest_value": 5.27,
+      "prev_value": 5.31,
       "history": [
-        {
-          "date": "2025-09-22",
-          "value": 4.15
-        },
         {
           "date": "2025-09-23",
           "value": 4.12
@@ -3152,6 +3148,10 @@
         {
           "date": "2026-10-05",
           "value": 5.31
+        },
+        {
+          "date": "2026-10-06",
+          "value": 5.27
         }
       ]
     },
@@ -3160,14 +3160,10 @@
       "name": "10Y-2Y Treasury Spread",
       "unit": "pp",
       "group": "rates",
-      "latest_date": "2026-10-06",
-      "latest_value": 0.48,
-      "prev_value": 0.47,
+      "latest_date": "2026-10-07",
+      "latest_value": 0.51,
+      "prev_value": 0.48,
       "history": [
-        {
-          "date": "2025-09-23",
-          "value": 0.59
-        },
         {
           "date": "2025-09-24",
           "value": 0.59
@@ -4203,6 +4199,10 @@
         {
           "date": "2026-10-06",
           "value": 0.48
+        },
+        {
+          "date": "2026-10-07",
+          "value": 0.51
         }
       ]
     },
@@ -4831,14 +4831,10 @@
       "name": "Initial Jobless Claims",
       "unit": "claims",
       "group": "labor",
-      "latest_date": "2026-09-26",
+      "latest_date": "2026-10-03",
       "latest_value": 197000.0,
-      "prev_value": 198000.0,
+      "prev_value": 199000.0,
       "history": [
-        {
-          "date": "2025-10-04",
-          "value": 233000.0
-        },
         {
           "date": "2025-10-11",
           "value": 222000.0
@@ -5041,6 +5037,10 @@
         },
         {
           "date": "2026-09-26",
+          "value": 199000.0
+        },
+        {
+          "date": "2026-10-03",
           "value": 197000.0
         }
       ]
@@ -6363,14 +6363,10 @@
       "name": "CBOE Volatility Index",
       "unit": "index",
       "group": "growth",
-      "latest_date": "2026-10-06",
-      "latest_value": 15.01,
-      "prev_value": 15.52,
+      "latest_date": "2026-10-07",
+      "latest_value": 15.08,
+      "prev_value": 15.01,
       "history": [
-        {
-          "date": "2025-10-03",
-          "value": 16.65
-        },
         {
           "date": "2025-10-06",
           "value": 16.37
@@ -7406,6 +7402,10 @@
         {
           "date": "2026-10-06",
           "value": 15.01
+        },
+        {
+          "date": "2026-10-07",
+          "value": 15.08
         }
       ]
     }
