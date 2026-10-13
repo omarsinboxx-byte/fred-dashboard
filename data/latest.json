@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-10-12T20:56:33Z",
+  "updated_utc": "2026-10-13T18:54:54Z",
   "source": "Federal Reserve Bank of St. Louis (FRED)",
   "series": {
     "DFF": {
@@ -6363,14 +6363,10 @@
       "name": "CBOE Volatility Index",
       "unit": "index",
       "group": "growth",
-      "latest_date": "2026-10-09",
-      "latest_value": 14.84,
-      "prev_value": 15.41,
+      "latest_date": "2026-10-12",
+      "latest_value": 15.21,
+      "prev_value": 14.84,
       "history": [
-        {
-          "date": "2025-10-08",
-          "value": 16.3
-        },
         {
           "date": "2025-10-09",
           "value": 16.43
@@ -7406,6 +7402,10 @@
         {
           "date": "2026-10-09",
           "value": 14.84
+        },
+        {
+          "date": "2026-10-12",
+          "value": 15.21
         }
       ]
     }
