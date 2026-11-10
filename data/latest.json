@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-11-09T21:57:34Z",
+  "updated_utc": "2026-11-10T19:21:19Z",
   "source": "Federal Reserve Bank of St. Louis (FRED)",
   "series": {
     "DFF": {
@@ -3160,14 +3160,10 @@
       "name": "10Y-2Y Treasury Spread",
       "unit": "pp",
       "group": "rates",
-      "latest_date": "2026-11-06",
-      "latest_value": 0.35,
-      "prev_value": 0.38,
+      "latest_date": "2026-11-09",
+      "latest_value": 0.32,
+      "prev_value": 0.35,
       "history": [
-        {
-          "date": "2025-10-24",
-          "value": 0.54
-        },
         {
           "date": "2025-10-27",
           "value": 0.53
@@ -4203,6 +4199,10 @@
         {
           "date": "2026-11-06",
           "value": 0.35
+        },
+        {
+          "date": "2026-11-09",
+          "value": 0.32
         }
       ]
     },
@@ -4211,14 +4211,10 @@
       "name": "CPI (YoY)",
       "unit": "%",
       "group": "inflation",
-      "latest_date": "2026-09-01",
-      "latest_value": 4.02,
-      "prev_value": 3.71,
+      "latest_date": "2026-10-01",
+      "latest_value": 4.08,
+      "prev_value": 4.02,
       "history": [
-        {
-          "date": "2023-09-01",
-          "value": 3.69
-        },
         {
           "date": "2023-10-01",
           "value": 3.25
@@ -4358,6 +4354,10 @@
         {
           "date": "2026-09-01",
           "value": 4.02
+        },
+        {
+          "date": "2026-10-01",
+          "value": 4.08
         }
       ]
     },
@@ -6363,14 +6363,10 @@
       "name": "CBOE Volatility Index",
       "unit": "index",
       "group": "growth",
-      "latest_date": "2026-11-06",
-      "latest_value": 25.64,
-      "prev_value": 28.18,
+      "latest_date": "2026-11-09",
+      "latest_value": 19.92,
+      "prev_value": 25.64,
       "history": [
-        {
-          "date": "2025-11-05",
-          "value": 18.01
-        },
         {
           "date": "2025-11-06",
           "value": 19.5
@@ -7406,6 +7402,10 @@
         {
           "date": "2026-11-06",
           "value": 25.64
+        },
+        {
+          "date": "2026-11-09",
+          "value": 19.92
         }
       ]
     }
