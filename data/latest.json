@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-11-11T19:16:02Z",
+  "updated_utc": "2026-11-12T19:34:14Z",
   "source": "Federal Reserve Bank of St. Louis (FRED)",
   "series": {
     "DFF": {
@@ -4831,14 +4831,10 @@
       "name": "Initial Jobless Claims",
       "unit": "claims",
       "group": "labor",
-      "latest_date": "2026-10-31",
-      "latest_value": 189000.0,
-      "prev_value": 195000.0,
+      "latest_date": "2026-11-07",
+      "latest_value": 200000.0,
+      "prev_value": 191000.0,
       "history": [
-        {
-          "date": "2025-11-08",
-          "value": 228000.0
-        },
         {
           "date": "2025-11-15",
           "value": 222000.0
@@ -5041,7 +5037,11 @@
         },
         {
           "date": "2026-10-31",
-          "value": 189000.0
+          "value": 191000.0
+        },
+        {
+          "date": "2026-11-07",
+          "value": 200000.0
         }
       ]
     },
@@ -6363,14 +6363,10 @@
       "name": "CBOE Volatility Index",
       "unit": "index",
       "group": "growth",
-      "latest_date": "2026-11-10",
-      "latest_value": 19.46,
-      "prev_value": 19.92,
+      "latest_date": "2026-11-11",
+      "latest_value": 17.49,
+      "prev_value": 19.46,
       "history": [
-        {
-          "date": "2025-11-07",
-          "value": 19.08
-        },
         {
           "date": "2025-11-10",
           "value": 17.6
@@ -7406,6 +7402,10 @@
         {
           "date": "2026-11-10",
           "value": 19.46
+        },
+        {
+          "date": "2026-11-11",
+          "value": 17.49
         }
       ]
     }
