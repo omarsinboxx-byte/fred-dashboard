@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-11-16T21:39:47Z",
+  "updated_utc": "2026-11-17T20:29:19Z",
   "source": "Federal Reserve Bank of St. Louis (FRED)",
   "series": {
     "DFF": {
@@ -3160,14 +3160,10 @@
       "name": "10Y-2Y Treasury Spread",
       "unit": "pp",
       "group": "rates",
-      "latest_date": "2026-11-13",
-      "latest_value": 0.27,
-      "prev_value": 0.24,
+      "latest_date": "2026-11-16",
+      "latest_value": 0.29,
+      "prev_value": 0.27,
       "history": [
-        {
-          "date": "2025-10-30",
-          "value": 0.5
-        },
         {
           "date": "2025-10-31",
           "value": 0.51
@@ -4203,6 +4199,10 @@
         {
           "date": "2026-11-13",
           "value": 0.27
+        },
+        {
+          "date": "2026-11-16",
+          "value": 0.29
         }
       ]
     },
@@ -6363,14 +6363,10 @@
       "name": "CBOE Volatility Index",
       "unit": "index",
       "group": "growth",
-      "latest_date": "2026-11-13",
-      "latest_value": 19.3,
-      "prev_value": 18.7,
+      "latest_date": "2026-11-16",
+      "latest_value": 22.91,
+      "prev_value": 19.3,
       "history": [
-        {
-          "date": "2025-11-12",
-          "value": 17.51
-        },
         {
           "date": "2025-11-13",
           "value": 20.0
@@ -7406,6 +7402,10 @@
         {
           "date": "2026-11-13",
           "value": 19.3
+        },
+        {
+          "date": "2026-11-16",
+          "value": 22.91
         }
       ]
     }
