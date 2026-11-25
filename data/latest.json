@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-11-24T21:56:34Z",
+  "updated_utc": "2026-11-25T21:05:58Z",
   "source": "Federal Reserve Bank of St. Louis (FRED)",
   "series": {
     "DFF": {
@@ -3160,14 +3160,10 @@
       "name": "10Y-2Y Treasury Spread",
       "unit": "pp",
       "group": "rates",
-      "latest_date": "2026-11-23",
-      "latest_value": 0.29,
+      "latest_date": "2026-11-24",
+      "latest_value": 0.28,
       "prev_value": 0.29,
       "history": [
-        {
-          "date": "2025-11-07",
-          "value": 0.56
-        },
         {
           "date": "2025-11-10",
           "value": 0.55
@@ -4203,6 +4199,10 @@
         {
           "date": "2026-11-23",
           "value": 0.29
+        },
+        {
+          "date": "2026-11-24",
+          "value": 0.28
         }
       ]
     },
@@ -4366,14 +4366,10 @@
       "name": "Core PCE (YoY)",
       "unit": "%",
       "group": "inflation",
-      "latest_date": "2026-09-01",
-      "latest_value": 3.12,
-      "prev_value": 3.03,
+      "latest_date": "2026-10-01",
+      "latest_value": 3.26,
+      "prev_value": 3.14,
       "history": [
-        {
-          "date": "2023-10-01",
-          "value": 3.56
-        },
         {
           "date": "2023-11-01",
           "value": 3.44
@@ -4508,11 +4504,15 @@
         },
         {
           "date": "2026-08-01",
-          "value": 3.03
+          "value": 3.05
         },
         {
           "date": "2026-09-01",
-          "value": 3.12
+          "value": 3.14
+        },
+        {
+          "date": "2026-10-01",
+          "value": 3.26
         }
       ]
     },
@@ -4831,14 +4831,10 @@
       "name": "Initial Jobless Claims",
       "unit": "claims",
       "group": "labor",
-      "latest_date": "2026-11-14",
-      "latest_value": 203000.0,
+      "latest_date": "2026-11-21",
+      "latest_value": 189000.0,
       "prev_value": 202000.0,
       "history": [
-        {
-          "date": "2025-11-22",
-          "value": 218000.0
-        },
         {
           "date": "2025-11-29",
           "value": 216000.0
@@ -5041,7 +5037,11 @@
         },
         {
           "date": "2026-11-14",
-          "value": 203000.0
+          "value": 202000.0
+        },
+        {
+          "date": "2026-11-21",
+          "value": 189000.0
         }
       ]
     },
@@ -5206,7 +5206,7 @@
       "unit": "%",
       "group": "growth",
       "latest_date": "2026-07-01",
-      "latest_value": 3.4,
+      "latest_value": 4.3,
       "prev_value": 2.2,
       "history": [
         {
@@ -5303,7 +5303,7 @@
         },
         {
           "date": "2026-07-01",
-          "value": 3.4
+          "value": 4.3
         }
       ]
     },
@@ -6363,14 +6363,10 @@
       "name": "CBOE Volatility Index",
       "unit": "index",
       "group": "growth",
-      "latest_date": "2026-11-23",
-      "latest_value": 26.62,
-      "prev_value": 35.89,
+      "latest_date": "2026-11-24",
+      "latest_value": 26.36,
+      "prev_value": 26.62,
       "history": [
-        {
-          "date": "2025-11-20",
-          "value": 26.42
-        },
         {
           "date": "2025-11-21",
           "value": 23.43
@@ -7406,6 +7402,10 @@
         {
           "date": "2026-11-23",
           "value": 26.62
+        },
+        {
+          "date": "2026-11-24",
+          "value": 26.36
         }
       ]
     }
