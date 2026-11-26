@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-11-25T21:05:58Z",
+  "updated_utc": "2026-11-26T20:57:49Z",
   "source": "Federal Reserve Bank of St. Louis (FRED)",
   "series": {
     "DFF": {
@@ -7,14 +7,10 @@
       "name": "Effective Fed Funds Rate",
       "unit": "%",
       "group": "rates",
-      "latest_date": "2026-11-23",
+      "latest_date": "2026-11-24",
       "latest_value": 3.88,
       "prev_value": 3.88,
       "history": [
-        {
-          "date": "2026-03-09",
-          "value": 3.64
-        },
         {
           "date": "2026-03-10",
           "value": 3.64
@@ -1050,6 +1046,10 @@
         {
           "date": "2026-11-23",
           "value": 3.88
+        },
+        {
+          "date": "2026-11-24",
+          "value": 3.88
         }
       ]
     },
@@ -1058,14 +1058,10 @@
       "name": "2-Year Treasury Yield",
       "unit": "%",
       "group": "rates",
-      "latest_date": "2026-11-23",
+      "latest_date": "2026-11-24",
       "latest_value": 4.63,
       "prev_value": 4.63,
       "history": [
-        {
-          "date": "2025-11-07",
-          "value": 3.55
-        },
         {
           "date": "2025-11-10",
           "value": 3.58
@@ -2101,6 +2097,10 @@
         {
           "date": "2026-11-23",
           "value": 4.63
+        },
+        {
+          "date": "2026-11-24",
+          "value": 4.63
         }
       ]
     },
@@ -2109,14 +2109,10 @@
       "name": "10-Year Treasury Yield",
       "unit": "%",
       "group": "rates",
-      "latest_date": "2026-11-23",
-      "latest_value": 4.92,
+      "latest_date": "2026-11-24",
+      "latest_value": 4.91,
       "prev_value": 4.92,
       "history": [
-        {
-          "date": "2025-11-07",
-          "value": 4.11
-        },
         {
           "date": "2025-11-10",
           "value": 4.13
@@ -3152,6 +3148,10 @@
         {
           "date": "2026-11-23",
           "value": 4.92
+        },
+        {
+          "date": "2026-11-24",
+          "value": 4.91
         }
       ]
     },
@@ -3160,14 +3160,10 @@
       "name": "10Y-2Y Treasury Spread",
       "unit": "pp",
       "group": "rates",
-      "latest_date": "2026-11-24",
-      "latest_value": 0.28,
-      "prev_value": 0.29,
+      "latest_date": "2026-11-25",
+      "latest_value": 0.24,
+      "prev_value": 0.28,
       "history": [
-        {
-          "date": "2025-11-10",
-          "value": 0.55
-        },
         {
           "date": "2025-11-12",
           "value": 0.52
@@ -4203,6 +4199,10 @@
         {
           "date": "2026-11-24",
           "value": 0.28
+        },
+        {
+          "date": "2026-11-25",
+          "value": 0.24
         }
       ]
     },
